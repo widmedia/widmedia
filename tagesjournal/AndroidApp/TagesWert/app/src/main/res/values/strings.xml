@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TagesWert</string>
+    <string name="app_subtitle">Wie war dein Tag?</string>
+    <string name="feature_local">alles lokal</string>
+    <string name="feature_encrypted">alles verschlüsselt</string>
+    <string name="feature_no_ads">ohne Werbung</string>
+
+    <!-- Auth -->
+    <string name="auth_title">Entsperren</string>
+    <string name="auth_subtitle"> </string>
+    <string name="auth_prompt">Authentifizierung erforderlich</string>
+    <string name="auth_cancel">Abbrechen</string>
+    <string name="auth_error">Fehler bei der Authentifizierung</string>
+    <string name="auth_no_biometric">Kein Fingerabdruck eingerichtet. Diese App funktioniert nur mit Fingerabdruck. Bitte in den Einstellungen konfigurieren.</string>
+    <string name="auth_waiting">Tippe zum Entsperren</string>
+    <string name="auth_welcome">Willkommen zurück! ✓</string>
+    <string name="auth_retry">Nicht erkannt. Erneut versuchen.</string>
+    <string name="auth_fingerprint">Fingerabdruck</string>
+    <string name="lock_title">Sperren</string>
+
+    <!-- Main -->
+    <string name="no_entries">Noch keine Einträge</string>
+    <string name="no_entries_hint">Tippe auf ein Datum im Kalender</string>
+    <string name="entries_title">Einträge</string>
+    <string name="statistics_title">Statistik</string>
+    <string name="total_entries_count">Du hast insgesamt %1$d Einträge.</string>
+    <string name="show_all_entries">Alle Einträge anzeigen</string>
+
+    <!-- Entry -->
+    <string name="new_entry">Neuer Eintrag</string>
+    <string name="edit_entry">Eintrag bearbeiten</string>
+    <string name="entry_text">Notizen</string>
+    <string name="entry_text_hint">Tagebuch…</string>
+    <string name="back">Zurück</string>
+    <string name="save">Speichern</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="delete">Löschen</string>
+    <string name="delete_confirm_title">Eintrag löschen?</string>
+    <string name="delete_confirm_message">Dieser Eintrag wird unwiderruflich gelöscht.</string>
+    <string name="entry_saved">Eintrag gespeichert</string>
+    <string name="entry_deleted">Eintrag gelöscht</string>
+    <string name="error_unknown">Unbekannter Fehler</string>
+
+    <!-- Export / Import -->
+    <string name="export_title">Datenbank exportieren</string>
+    <string name="export_description">Alle Einträge als verschlüsselte Datei exportieren</string>
+    <string name="export_password">Export-Passwort</string>
+    <string name="export_password_hint">Passwort für die Exportdatei</string>
+    <string name="export_confirm">Exportieren</string>
+    <string name="export_chooser_title">Export speichern</string>
+    <string name="export_success">Export erfolgreich gespeichert</string>
+    <string name="export_error">Fehler beim Exportieren</string>
+    <string name="export_reminder_title">Sicherung empfohlen</string>
+    <string name="export_reminder_text">Dein letzter Export ist über 30 Tage her. Deine Daten werden nur lokal gespeichert und sind biometrisch verschlüsselt. Sollten sich deine Fingerabdrücke ändern, werden die lokalen Daten unbrauchbar. Bitte exportiere regelmässig eine Sicherung.</string>
+
+    <string name="import_title">Datenbank importieren</string>
+    <string name="import_description">Einträge aus einer verschlüsselten Datei importieren</string>
+    <string name="import_password">Import-Passwort</string>
+    <string name="import_password_hint">Passwort der Importdatei</string>
+    <string name="import_confirm">Importieren</string>
+    <string name="import_success">Import erfolgreich</string>
+    <string name="import_error">Fehler beim Importieren. Falsches Passwort?</string>
+    <string name="import_file_select">Datei auswählen</string>
+    <string name="import_no_file">Keine Datei ausgewählt</string>
+    <string name="import_overwrite_warning">Alle bestehenden Einträge werden überschrieben.</string>
+    <string name="import_summary_dialog_title">Import bestätigen</string>
+    <string name="import_summary_text">Bisher sind %1$d Einträge enthalten. Diese werden gelöscht und %2$d neue Einträge (im Zeitraum von %3$s bis %4$s) werden importiert.</string>
+    <string name="import_summary_confirm">Jetzt überschreiben</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Einstellungen</string>
+    <string name="data_management">Datenverwaltung</string>
+    <string name="help_tutorial">Hilfe &amp; Tutorial</string>
+
+    <!-- Password -->
+    <string name="password_show">Passwort anzeigen</string>
+    <string name="password_hide">Passwort verbergen</string>
+    <string name="password_empty_error">Passwort darf nicht leer sein</string>
+    <string name="password_saved">Passwort gespeichert</string>
+
+    <!-- Days of week (short) -->
+    <string name="mon">Mo</string>
+    <string name="tue">Di</string>
+    <string name="wed">Mi</string>
+    <string name="thu">Do</string>
+    <string name="fri">Fr</string>
+    <string name="sat">Sa</string>
+    <string name="sun">So</string>
+
+    <!-- FAB -->
+    <string name="add_entry">Eintrag hinzufügen</string>
+    <string name="fab_description">Neuen Eintrag erstellen</string>
+
+    <!-- Tutorial -->
+    <string name="intro_skip">Tutorial überspringen</string>
+    <string name="intro_next">Weiter</string>
+    <string name="restart_tutorial">Tutorial neu starten</string>
+    <string name="restart_tutorial_desc">Erklärt die Funktionen der App erneut</string>
+    <string name="tutorial_welcome_title">Tutorial</string>
+    <string name="tutorial_past_dates">Du kannst alle Daten in der Vergangenheit (plus den heutigen Tag) anklicken, um sie zu bewerten. Versuchen wir es mit heute!</string>
+    <string name="tutorial_rating">Bewege den Schieberegler, um deinen Tag zu bewerten. Je grüner, desto besser!</string>
+    <string name="tutorial_notes">Hier kannst du deine Gedanken und Erlebnisse festhalten. Wir haben mal etwas für dich vorgeschrieben.</string>
+    <string name="tutorial_save">Speichere deinen Eintrag nun ab.</string>
+    <string name="tutorial_color_change">Siehst du? Das Datum im Kalender hat nun eine Farbe erhalten, die deiner Bewertung entspricht. So siehst du auf einen Blick, wie dein Monat war!</string>
+    <string name="tutorial_settings_data">In den Einstellungen kannst du deine Daten sichern. Da alles lokal und verschlüsselt ist, solltest du regelmässig einen Export erstellen, um bei einem Gerätewechsel oder Problemen deine Einträge wiederherstellen zu können.</string>
+    <string name="tutorial_settings_restart">Falls du später noch einmal Hilfe brauchst, kannst du das Tutorial hier jederzeit neu starten. Viel Freude mit TagesWert!</string>
+    <string name="tutorial_finish">Tutorial abschliessen</string>
+</resources>
