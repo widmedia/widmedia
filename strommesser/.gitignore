@@ -1,0 +1,11 @@
+web/verbrauch/dbConn.php
+web/verbrauch/tmp.html
+web/verbrauch/tmp.php
+.vscode/settings.json
+*.pyc
+web/ota/
+pico2w/run.log
+pico2w/my_config_0001.py
+pico2w/my_config_0002.py
+pico2w/my_config_0004.py
+pico2w/trial/*

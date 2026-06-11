@@ -1,0 +1,14 @@
+User-Agent: *
+Allow: /wp-content/uploads/
+Disallow: /wp-admin/
+Disallow: /readme.html
+Disallow: /blogs/
+Disallow: /tmp/
+Disallow: /verbrauch/index.php
+Disallow: /verbrauch/login.php
+Disallow: /verbrauch/settings.php
+Disallow: /verbrauch/statistic.php
+
+ 
+Sitemap: https://strommesser.ch/sitemap.xml
+Sitemap: https://strommesser.ch/wp-sitemap.xml
