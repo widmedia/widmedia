@@ -18,7 +18,7 @@ import tempfile
 from pathlib import Path
 
 try:
-    from PIL import Image
+    from PIL import Image # type: ignore
 except ImportError:
     print("Pillow is required: pip install Pillow")
     sys.exit(1)
@@ -55,8 +55,8 @@ OUTPUT_CROPPED = next_output_path()
 ADB_PATH = r"C:\temp\scrcpy\scrcpy-win64-v4.0\adb.exe"
 # ADB_PATH = shutil.which("adb") or "adb"
 
-CROP_TOP    = 140
-CROP_BOTTOM = 280
+CROP_TOP    = 76
+CROP_BOTTOM = 344
 
 
 def capture_via_adb() -> Image.Image:

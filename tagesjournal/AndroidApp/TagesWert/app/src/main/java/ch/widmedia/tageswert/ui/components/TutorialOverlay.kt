@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.widmedia.tageswert.R
+import ch.widmedia.tageswert.ui.TutorialStep
 import ch.widmedia.tageswert.ui.theme.*
 import kotlin.math.*
 
@@ -35,6 +36,7 @@ fun TutorialOverlay(
     text: String,
     onNext: () -> Unit,
     onSkip: () -> Unit,
+    step: TutorialStep = TutorialStep.NONE,
     targetRect: Rect? = null,
     isLastStep: Boolean = false,
     modifier: Modifier = Modifier
@@ -68,6 +70,7 @@ fun TutorialOverlay(
                         text = text,
                         onNext = onNext,
                         onSkip = onSkip,
+                        step = step,
                         isLastStep = isLastStep,
                         modifier = modifier.onGloballyPositioned { cardRect = it.boundsInWindow() }
                     )
@@ -76,6 +79,7 @@ fun TutorialOverlay(
                         text = text,
                         onNext = onNext,
                         onSkip = onSkip,
+                        step = step,
                         isLastStep = isLastStep,
                         modifier = modifier.onGloballyPositioned { cardRect = it.boundsInWindow() }
                     )
@@ -102,7 +106,7 @@ fun TutorialOverlay(
         } else {
             // No target: Center the card
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                TutorialCard(text, onNext, onSkip, isLastStep, modifier)
+                TutorialCard(text, onNext, onSkip, step, isLastStep, modifier)
             }
         }
     }
@@ -181,6 +185,7 @@ private fun TutorialCard(
     text: String,
     onNext: () -> Unit,
     onSkip: () -> Unit,
+    step: TutorialStep = TutorialStep.NONE,
     isLastStep: Boolean = false,
     modifier: Modifier = Modifier
 ) {
@@ -195,21 +200,36 @@ private fun TutorialCard(
     ) {
         Column(
             modifier = Modifier.padding(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.Start, // Changed to Start for left alignment
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(
-                text = stringResource(R.string.tutorial_welcome_title),
-                style = MaterialTheme.typography.titleMedium,
-                color = DeepForest,
-                fontWeight = FontWeight.Bold
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.tutorial_welcome_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = DeepForest,
+                    fontWeight = FontWeight.Bold
+                )
+                
+                if (step != TutorialStep.NONE) {
+                    Text(
+                        text = "${step.getStepNumber()} / ${TutorialStep.TOTAL_STEPS}",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = DeepForest.copy(alpha = 0.6f),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
 
             Text(
                 text = text,
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color.Black.copy(alpha = 0.7f),
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Start, // Changed to Start
                 lineHeight = 20.sp
             )
 

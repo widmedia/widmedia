@@ -40,7 +40,22 @@ enum class TutorialStep {
     SAVE,         // Point to save button
     COLOR_EXPLANATION, // Back on main screen, explain color
     SETTINGS_DATA, // Settings page, explain export/import
-    RESTART_INFO // Main screen, point to restart button
+    RESTART_INFO; // Main screen, point to restart button
+
+    fun getStepNumber(): Int = when (this) {
+        NONE -> 0
+        WELCOME -> 1
+        RATING -> 2
+        NOTES -> 3
+        SAVE -> 4
+        COLOR_EXPLANATION -> 5
+        SETTINGS_DATA -> 6
+        RESTART_INFO -> 7
+    }
+
+    companion object {
+        const val TOTAL_STEPS = 7
+    }
 }
 
 data class MonatsStatistik(
@@ -134,7 +149,9 @@ class MainViewModel(private val repository: EintragRepository) : ViewModel() {
     }
 
     fun startTutorial() {
-        _uiState.value = _uiState.value.copy(tutorialStep = TutorialStep.WELCOME)
+        _uiState.value = _uiState.value.copy(
+            tutorialStep = TutorialStep.WELCOME
+        )
     }
 
     fun setTargetRect(rect: Rect?) {
@@ -166,7 +183,9 @@ class MainViewModel(private val repository: EintragRepository) : ViewModel() {
                 editingEintrag?.let {
                     speichern(it) {
                         onBack()
-                        _uiState.value = _uiState.value.copy(tutorialStep = TutorialStep.COLOR_EXPLANATION)
+                        _uiState.value = _uiState.value.copy(
+                            tutorialStep = TutorialStep.COLOR_EXPLANATION
+                        )
                     }
                 }
             }
@@ -180,6 +199,7 @@ class MainViewModel(private val repository: EintragRepository) : ViewModel() {
                 _uiState.value = _uiState.value.copy(tutorialStep = TutorialStep.RESTART_INFO)
             }
             TutorialStep.RESTART_INFO -> {
+                deleteTutorialEntry()
                 setIntroShown(context)
                 _uiState.value = _uiState.value.copy(tutorialStep = TutorialStep.NONE)
             }
@@ -188,8 +208,19 @@ class MainViewModel(private val repository: EintragRepository) : ViewModel() {
     }
 
     fun skipTutorial(context: Context) {
+        deleteTutorialEntry()
         setIntroShown(context)
         _uiState.value = _uiState.value.copy(tutorialStep = TutorialStep.NONE)
+    }
+
+    private fun deleteTutorialEntry() {
+        viewModelScope.launch {
+            val today = DateUtil.toIso(LocalDate.now())
+            repository.eintraegFuerDatum(today)?.let {
+                repository.loeschen(it)
+                ladeMonatBewertungen(LocalDate.now())
+            }
+        }
     }
 
     fun restartTutorial(context: Context) {

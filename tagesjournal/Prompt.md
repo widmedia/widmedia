@@ -2,9 +2,6 @@
 
 ## Refinement
 This list is updated as soon as the stuff works, only the next few points (TODOs) are listed 
-1. Tutorial: delete the newly created entry at the end of the tutorial. Do this also when the skip-tutorial button is pressed (catch the case where there is no entry to be deleted)
-1. Tutorial: add a 1/6 counter to the title.  
-1. Entry page: there is a green button on green background. Add a card around it.  
 1. re-think the picture-in-picture mode. Not really a use case, app should close or go into the background.  
 
 1. rework the settings page, make it more clearly arranged. Maybe: change name and symbol to import/export. Maybe have the link to the import/export at the page where all entries are visible and thus no special symbol anymore on the main page?
@@ -14,9 +11,7 @@ This list is updated as soon as the stuff works, only the next few points (TODOs
 
 
 ## Webpage
-1. Modify the page on https://widmedia.ch/index.html. Change the block about the TagesWert app. Base the design on the picture available at https://widmedia.ch/img/StoreIcon2.png. For the block integrate the screenshot which can be found on https://widmedia.ch/img/blabla.png. Use the Raleway font for the title (the font is available on https://widmedia.ch/schwimmmesser/fonts/raleway-v12-latin-regular.woff).  Make sure to use relative paths in the html file. Do not change the other blocks of the html page.
-
-Manually: change the texts. 
+1. Manually: change the texts. 
 
 
 

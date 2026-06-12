@@ -344,6 +344,7 @@ fun HauptScreen(
                     text = stringResource(R.string.tutorial_past_dates),
                     onNext = { viewModel.advanceTutorial(context, onEintragKlick, {}) },
                     onSkip = { viewModel.skipTutorial(context) },
+                    step = uiState.tutorialStep,
                     targetRect = uiState.targetRect
                 )
             }
@@ -352,6 +353,7 @@ fun HauptScreen(
                     text = stringResource(R.string.tutorial_color_change),
                     onNext = { viewModel.advanceTutorial(context, { _ -> onEinstellungen() }, {}) },
                     onSkip = { viewModel.skipTutorial(context) },
+                    step = uiState.tutorialStep,
                     targetRect = uiState.targetRect
                 )
             }
@@ -360,6 +362,7 @@ fun HauptScreen(
                     text = stringResource(R.string.tutorial_settings_restart),
                     onNext = { viewModel.advanceTutorial(context, {}, {}) },
                     onSkip = { viewModel.skipTutorial(context) },
+                    step = uiState.tutorialStep,
                     targetRect = uiState.targetRect,
                     isLastStep = true
                 )

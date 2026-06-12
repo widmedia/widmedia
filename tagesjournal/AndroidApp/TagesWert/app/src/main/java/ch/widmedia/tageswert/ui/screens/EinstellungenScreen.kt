@@ -365,6 +365,7 @@ fun EinstellungenScreen(
                 text = stringResource(R.string.tutorial_settings_data),
                 onNext = { viewModel.advanceTutorial(context, {}, onZurueck) },
                 onSkip = { viewModel.skipTutorial(context) },
+                step = uiState.tutorialStep,
                 targetRect = uiState.targetRect
             )
         }

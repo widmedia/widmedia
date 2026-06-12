@@ -264,36 +264,47 @@ fun EintragScreen(
                     }
 
                     // Save Button
-                    Button(
-                        onClick = {
-                            viewModel.speichern(eintrag) { onZurueck() }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp)
-                            .onGloballyPositioned { coords ->
-                                if (uiState.tutorialStep == TutorialStep.SAVE) {
-                                    viewModel.setTargetRect(coords.boundsInWindow())
-                                }
-                            },
-                        shape = AppCardDefaults.shape,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary
-                        )
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = AppCardDefaults.largeShape,
+                        colors = AppCardDefaults.colors(),
+                        elevation = AppCardDefaults.defaultElevation()
                     ) {
-                        Icon(
-                            imageVector = Icons.Filled.Check,
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Text(
-                            text = stringResource(R.string.save),
-                            style = MaterialTheme.typography.titleMedium,
-                            color = Color.White,
-                            fontWeight = FontWeight.Normal
-                        )
+                        Column(
+                            modifier = Modifier.padding(20.dp)
+                        ) {
+                            Button(
+                                onClick = {
+                                    viewModel.speichern(eintrag) { onZurueck() }
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(56.dp)
+                                    .onGloballyPositioned { coords ->
+                                        if (uiState.tutorialStep == TutorialStep.SAVE) {
+                                            viewModel.setTargetRect(coords.boundsInWindow())
+                                        }
+                                    },
+                                shape = AppCardDefaults.shape,
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.primary,
+                                    contentColor = MaterialTheme.colorScheme.onPrimary
+                                )
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Check,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    text = stringResource(R.string.save),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Normal
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -306,6 +317,7 @@ fun EintragScreen(
                     text = stringResource(R.string.tutorial_rating),
                     onNext = { viewModel.advanceTutorial(context, {}, onZurueck) },
                     onSkip = { viewModel.skipTutorial(context) },
+                    step = uiState.tutorialStep,
                     targetRect = uiState.targetRect
                 )
             }
@@ -314,6 +326,7 @@ fun EintragScreen(
                     text = stringResource(R.string.tutorial_notes),
                     onNext = { viewModel.advanceTutorial(context, {}, onZurueck) },
                     onSkip = { viewModel.skipTutorial(context) },
+                    step = uiState.tutorialStep,
                     targetRect = uiState.targetRect
                 )
             }
@@ -322,6 +335,7 @@ fun EintragScreen(
                     text = stringResource(R.string.tutorial_save),
                     onNext = { viewModel.advanceTutorial(context, {}, onZurueck) },
                     onSkip = { viewModel.skipTutorial(context) },
+                    step = uiState.tutorialStep,
                     targetRect = uiState.targetRect
                 )
             }
