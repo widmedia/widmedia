@@ -14,7 +14,10 @@ This list is updated as soon as the stuff works, only the next few points (TODOs
 
 
 ## Webpage
-1. Refine it. Use the overview screenshot instead of the store-picture and use the Raleway font for the title. Change the texts. Font is available on https://widmedia.ch/schwimmmesser/fonts/raleway-v12-latin-regular.woff
+1. Modify the page on https://widmedia.ch/index.html. Change the block about the TagesWert app. Base the design on the picture available at https://widmedia.ch/img/StoreIcon2.png. For the block integrate the screenshot which can be found on https://widmedia.ch/img/blabla.png. Use the Raleway font for the title (the font is available on https://widmedia.ch/schwimmmesser/fonts/raleway-v12-latin-regular.woff).  Make sure to use relative paths in the html file. Do not change the other blocks of the html page.
+
+Manually: change the texts. 
+
 
 
 ## GIT re-org
