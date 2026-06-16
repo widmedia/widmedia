@@ -9,14 +9,19 @@
   <meta name="robots" content="index, follow">
   <title>widmedia.ch</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
 
   <style>
     @font-face {
       font-family: 'Raleway';
-      src: url('schwimmmesser/fonts/raleway-v12-latin-regular.woff') format('woff');
+      src: url('font/raleway-v37-latin-regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Nunito';
+      src: url('font/nunito-v32-latin-regular.woff2') format('woff2');
       font-weight: 400;
       font-style: normal;
       font-display: swap;
@@ -34,8 +39,8 @@
       --text-muted:   #6B6B68;
       --card-bg:      #FFFFFF;
       --radius:       12px;
-      --font-display: 'Playfair Display', Georgia, serif;
-      --font-body:    'Inter', system-ui, sans-serif;
+      --font-display: 'Raleway', Georgia, serif;
+      --font-body:    'Nunito', system-ui, sans-serif;
     }
 
     html { scroll-behavior: smooth; }
@@ -115,7 +120,7 @@
       margin-bottom: 0.9rem;
     }
     .hero-text h1 {
-      font-family: 'Raleway', var(--font-display);
+      font-family: var(--font-display);
       font-size: clamp(2.8rem, 6vw, 4.5rem);
       font-weight: 400;
       line-height: 1.05;
@@ -439,7 +444,7 @@
         <h1>TagesWert</h1>
         <p class="hero-subtitle">Wie war dein Tag?</p>
         <p class="hero-desc">
-          Halte jeden Tag fest &mdash; mit einer pers&ouml;nlichen Bewertung und deinen Notizen. Sicher auf deinem Ger&auml;t gespeichert, werbefrei und privat.
+          Halte jeden Tag fest &mdash; mit einer persönlichen Bewertung und deinen Notizen. Sicher auf deinem Gerät gespeichert, werbefrei und privat.
         </p>
         <div class="hero-pills">
           <span class="hero-pill">
@@ -494,7 +499,7 @@
           <p class="card-tag">Hardware &middot; Bluetooth</p>
           <h2>SchwimmMesser</h2>
           <p>
-            Ein kleiner, leichter Bluetooth-Beacon an der Schwimmbrille sendet Signale an einen Empf&auml;nger am Beckenrand &mdash; der misst die Signalst&auml;rke und z&auml;hlt automatisch die geschwommenen L&auml;ngen. Ein Projekt an der Schnittstelle von Sport und Embedded-Hardware.
+            Ein kleiner, leichter Bluetooth-Beacon an der Schwimmbrille sendet Signale an einen Empfänger am Beckenrand &mdash; der misst die Signalstärke und zählt automatisch die geschwommenen Längen. Ein Projekt an der Schnittstelle von Sport und Embedded-Hardware.
           </p>
           <a href="schwimmmesser" class="card-link">
             Mehr erfahren
@@ -511,7 +516,7 @@
           <p class="card-tag">Energie &middot; Smart Home</p>
           <h2>StromMesser</h2>
           <p>
-            Verbrauch verstehen, bevor er zur Rechnung wird. StromMesser liest Smart-Meter-Daten aus und stellt sie &uuml;bersichtlich dar &mdash; damit du weisst, wo dein Strom wirklich hinfliesst.
+            Verbrauch verstehen, bevor er zur Rechnung wird. StromMesser liest Smart-Meter-Daten aus und stellt sie übersichtlich dar &mdash; damit du weisst, wo dein Strom wirklich hinfliesst.
           </p>
           <a href="https://strommesser.ch" class="card-link">
             strommesser.ch
@@ -530,10 +535,10 @@
       <!-- Start -->
       <article class="card">
         <div class="card-body">
-          <p class="card-tag">Web &middot; Produktivit&auml;t</p>
+          <p class="card-tag">Web &middot; Produktivität</p>
           <h2>widmedia Start</h2>
           <p>
-            Deine pers&ouml;nliche Startseite mit allen Links an einem Ort. Klick &mdash; und der Link &ouml;ffnet sich in einem neuen Tab. Einfach Links hinzuf&uuml;gen, bearbeiten und loslegen.
+            Deine persönliche Startseite mit allen Links an einem Ort. Klick &mdash; und der Link öffnet sich in einem neuen Tab. Einfach Links hinzufügen, bearbeiten und loslegen.
           </p>
           <a href="start/index.php" class="card-link">
             Zur Startseite
