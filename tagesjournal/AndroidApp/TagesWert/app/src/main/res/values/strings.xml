@@ -38,6 +38,10 @@
     <string name="delete_confirm_message">Dieser Eintrag wird unwiderruflich gelöscht.</string>
     <string name="entry_saved">Eintrag gespeichert</string>
     <string name="entry_deleted">Eintrag gelöscht</string>
+    <string name="entries_deleted">Alle Einträge gelöscht</string>
+    <string name="delete_all">Alle löschen</string>
+    <string name="delete_all_confirm_title">Alle Einträge löschen?</string>
+    <string name="delete_all_confirm_message">Bist du sicher? Alle deine Einträge werden unwiderruflich gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.</string>
     <string name="error_unknown">Unbekannter Fehler</string>
 
     <!-- Export / Import -->
@@ -55,6 +59,7 @@
     <string name="import_password">Import-Passwort</string>
     <string name="import_confirm">Importieren</string>
     <string name="import_success">Import erfolgreich</string>
+    <string name="import_success_count">%1$d Einträge wurden erfolgreich importiert.</string>
     <string name="import_file_select">Datei auswählen</string>
     <string name="import_overwrite_warning">Alle bestehenden Einträge werden überschrieben.</string>
     <string name="import_summary_dialog_title">Import bestätigen</string>

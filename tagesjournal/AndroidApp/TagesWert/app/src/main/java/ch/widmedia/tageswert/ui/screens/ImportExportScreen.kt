@@ -23,6 +23,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Upload
@@ -45,7 +47,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SecondaryTabRow
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
@@ -119,6 +120,9 @@ fun ImportExportScreen(
         }
     }
 
+    // Manual snackbar handling removed - using persistent card instead
+    var successMessageToShow by remember { mutableStateOf<String?>(null) }
+
     var exportPasswort by remember { mutableStateOf(SecurityManager.getExportPassword(context) ?: "") }
     var exportPasswortSichtbar by remember { mutableStateOf(value = false) }
     var exportLaeuft by remember { mutableStateOf(value = false) }
@@ -157,9 +161,7 @@ fun ImportExportScreen(
                             output.write(data)
                         }
                         viewModel.updateLastExportTime(context)
-                        scope.launch {
-                            snackbarHostState.showSnackbar(exportSuccessText)
-                        }
+                        successMessageToShow = exportSuccessText
                     } catch (_: Exception) {
                         scope.launch {
                             snackbarHostState.showSnackbar(exportErrorText)
@@ -172,24 +174,8 @@ fun ImportExportScreen(
     }
 
     Scaffold(
-        modifier = modifier,
-        containerColor = Color.Transparent,
-        snackbarHost = {
-            SnackbarHost(snackbarHostState) { data ->
-                Snackbar(
-                    containerColor = SageGreen,
-                    contentColor = Color.White,
-                    shape = AppCardDefaults.smallShape,
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Text(
-                        text = data.visuals.message,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White
-                    )
-                }
-            }
-        }
+        modifier = modifier.fillMaxSize(),
+        containerColor = Color.Transparent
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -277,6 +263,51 @@ fun ImportExportScreen(
                     .padding(top = 16.dp, bottom = 100.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                // Success Message Card
+                successMessageToShow?.let { message ->
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = AppCardDefaults.largeShape,
+                        colors = AppCardDefaults.colors(),
+                        elevation = AppCardDefaults.defaultElevation()
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .clip(AppCardDefaults.smallShape)
+                                    .background(SageGreen.copy(alpha = 0.12f))
+                            ) {
+                                Icon(
+                                    Icons.Filled.Check,
+                                    null,
+                                    tint = SageGreen,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                            Text(
+                                text = message,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = DeepForest,
+                                modifier = Modifier.weight(1f)
+                            )
+                            IconButton(onClick = { successMessageToShow = null }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Close,
+                                    contentDescription = stringResource(R.string.cancel),
+                                    tint = SlateGray,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+
                 if (selectedTab == 0) {
                     // Export Card
                     EinstellungsKarte(
@@ -492,9 +523,9 @@ fun ImportExportScreen(
         }
 
         // Import Confirmation Dialog
-        val importSuccessText = stringResource(R.string.import_success)
         if (zeigeImportBestaetigung && importSummary != null) {
             val summary = importSummary!!
+            val successMessage = stringResource(R.string.import_success_count, summary.newCount)
             AlertDialog(
                 onDismissRequest = { zeigeImportBestaetigung = false },
                 title = { Text(stringResource(R.string.import_summary_dialog_title)) },
@@ -520,9 +551,7 @@ fun ImportExportScreen(
                                 importDateiName = ""
                                 importPasswort = ""
                                 importSummary = null
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(importSuccessText)
-                                }
+                                successMessageToShow = successMessage
                             }
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Terracotta)

@@ -302,6 +302,17 @@ class MainViewModel(private val repository: EintragRepository) : ViewModel() {
         }
     }
 
+    fun alleLoeschen(onDone: () -> Unit) {
+        viewModelScope.launch {
+            repository.alleLoeschen()
+            _uiState.value = _uiState.value.copy(
+                monatBewertungen = emptyMap(),
+                successResId = R.string.entries_deleted
+            )
+            onDone()
+        }
+    }
+
     fun getEncryptedExportData(context: Context, password: String, onResult: (ByteArray?) -> Unit) {
         viewModelScope.launch {
             try {
