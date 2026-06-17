@@ -12,9 +12,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import ch.widmedia.tageswert.ui.screens.AlleEintraegeScreen
-import ch.widmedia.tageswert.ui.screens.EinstellungenScreen
 import ch.widmedia.tageswert.ui.screens.EintragScreen
 import ch.widmedia.tageswert.ui.screens.HauptScreen
+import ch.widmedia.tageswert.ui.screens.ImportExportScreen
 
 sealed class Ziel(val route: String) {
     data object Haupt : Ziel("haupt")
@@ -83,7 +83,7 @@ fun TagesWertNavigation(
         }
 
         composable(Ziel.Einstellungen.route) {
-            EinstellungenScreen(
+            ImportExportScreen(
                 viewModel = viewModel,
                 onZurueck = { navController.popBackStack() }
             )

@@ -4,7 +4,6 @@
 This list is updated as soon as the stuff works, only the next few points (TODOs) are listed 
 1. re-think the picture-in-picture mode. Not really a use case, app should close or go into the background.  
 
-1. visually rework the import/export page, make it more clearly arranged.  
 1. In the @AlleEintraegeScreen.kt: add an option to delete all entries. Add a warning card before actually deleting all entries.  
 1. clean up the code. Check for newer stable versions of dependencies and in general reduce the number of imports and dependencies.  
 1. try out some different UIs / colors. TODO: maybe with another tool (figma)

@@ -97,7 +97,7 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EinstellungenScreen(
+fun ImportExportScreen(
     viewModel: MainViewModel,
     onZurueck: () -> Unit,
     modifier: Modifier = Modifier,
