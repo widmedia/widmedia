@@ -1,8 +1,5 @@
 package ch.widmedia.tageswert
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.material3.Text
-import androidx.compose.ui.Alignment
 import android.app.PictureInPictureParams
 import android.content.res.Configuration
 import android.net.Uri
@@ -10,13 +7,25 @@ import android.os.Bundle
 import android.util.Rational
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.view.WindowCompat
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.*
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -26,8 +35,8 @@ import ch.widmedia.tageswert.data.db.TagesWertDatabase
 import ch.widmedia.tageswert.data.repository.EintragRepository
 import ch.widmedia.tageswert.security.BiometricHelper
 import ch.widmedia.tageswert.security.SecurityManager
-import ch.widmedia.tageswert.ui.TagesWertNavigation
 import ch.widmedia.tageswert.ui.MainViewModel
+import ch.widmedia.tageswert.ui.TagesWertNavigation
 import ch.widmedia.tageswert.ui.screens.AuthStatus
 import ch.widmedia.tageswert.ui.screens.SperrScreen
 import ch.widmedia.tageswert.ui.theme.AppBackground

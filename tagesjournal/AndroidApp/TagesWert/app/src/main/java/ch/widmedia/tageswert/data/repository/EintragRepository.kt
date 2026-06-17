@@ -1,7 +1,6 @@
 package ch.widmedia.tageswert.data.repository
 
 import ch.widmedia.tageswert.data.db.TagEintragDao
-import ch.widmedia.tageswert.data.db.DatumBewertung
 import ch.widmedia.tageswert.data.model.TagEintrag
 import kotlinx.coroutines.flow.Flow
 
