@@ -44,15 +44,19 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -81,13 +85,15 @@ import ch.widmedia.tageswert.ui.components.TutorialOverlay
 import ch.widmedia.tageswert.ui.theme.AppCardDefaults
 import ch.widmedia.tageswert.ui.theme.DeepForest
 import ch.widmedia.tageswert.ui.theme.DividerColor
-import ch.widmedia.tageswert.ui.theme.GoldAmber
 import ch.widmedia.tageswert.ui.theme.SageGreen
 import ch.widmedia.tageswert.ui.theme.SlateGray
 import ch.widmedia.tageswert.ui.theme.Surface
 import ch.widmedia.tageswert.ui.theme.Terracotta
 import ch.widmedia.tageswert.utils.DateUtil
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -103,12 +109,16 @@ fun EinstellungenScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scrollState = rememberScrollState()
 
+    var selectedTab by remember { mutableIntStateOf(0) }
+
     // Scroll to tutorial items
     LaunchedEffect(uiState.tutorialStep) {
         if (uiState.tutorialStep == TutorialStep.SETTINGS_DATA) {
-            scrollState.animateScrollTo(200) // Scroll down a bit for data cards
+            selectedTab = 0 // Ensure Export tab is selected during tutorial
+            scrollState.animateScrollTo(200)
         }
     }
+
     var exportPasswort by remember { mutableStateOf(SecurityManager.getExportPassword(context) ?: "") }
     var exportPasswortSichtbar by remember { mutableStateOf(value = false) }
     var exportLaeuft by remember { mutableStateOf(value = false) }
@@ -122,7 +132,7 @@ fun EinstellungenScreen(
     var importSummary by remember { mutableStateOf<ImportSummary?>(null) }
     var zeigeImportBestaetigung by remember { mutableStateOf(false) }
 
-    // File picker for import (GetContent is usually safer with FragmentActivity than CreateDocument)
+    val importFileSelectText = stringResource(R.string.import_file_select)
     val dateiPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
     ) { uri ->
@@ -131,10 +141,12 @@ fun EinstellungenScreen(
             importDateiName = context.contentResolver.query(it, null, null, null, null)?.use { cursor ->
                 val nameIndex = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)
                 if (cursor.moveToFirst()) cursor.getString(nameIndex) else null
-            } ?: context.getString(R.string.import_file_select)
+            } ?: importFileSelectText
         }
     }
 
+    val exportSuccessText = stringResource(R.string.export_success)
+    val exportErrorText = stringResource(R.string.export_error)
     val onExportResult: (Uri?) -> Unit = { uri ->
         uri?.let { targetUri ->
             exportLaeuft = true
@@ -146,11 +158,11 @@ fun EinstellungenScreen(
                         }
                         viewModel.updateLastExportTime(context)
                         scope.launch {
-                            snackbarHostState.showSnackbar(context.getString(R.string.export_success))
+                            snackbarHostState.showSnackbar(exportSuccessText)
                         }
                     } catch (_: Exception) {
                         scope.launch {
-                            snackbarHostState.showSnackbar(context.getString(R.string.export_error))
+                            snackbarHostState.showSnackbar(exportErrorText)
                         }
                     }
                 }
@@ -189,7 +201,7 @@ fun EinstellungenScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .statusBarsPadding()
-                    .padding(bottom = 20.dp, start = 8.dp, end = 16.dp)
+                    .padding(bottom = 8.dp, start = 8.dp, end = 16.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -209,12 +221,51 @@ fun EinstellungenScreen(
                         )
                     }
                     Text(
-                        text = stringResource(R.string.settings_title),
+                        text = stringResource(R.string.settings_import_export),
                         style = MaterialTheme.typography.titleLarge,
                         color = Color.White,
                         fontWeight = FontWeight.Normal
                     )
                 }
+            }
+
+            // Tabs
+            SecondaryTabRow(
+                selectedTabIndex = selectedTab,
+                containerColor = Color.Transparent,
+                contentColor = Color.White,
+                indicator = {
+                    TabRowDefaults.SecondaryIndicator(
+                        modifier = Modifier.tabIndicatorOffset(selectedTab),
+                        color = Color.White,
+                        height = 3.dp
+                    )
+                },
+                divider = {},
+                modifier = Modifier.padding(horizontal = 16.dp)
+            ) {
+                Tab(
+                    selected = selectedTab == 0,
+                    onClick = { selectedTab = 0 },
+                    text = {
+                        Text(
+                            stringResource(R.string.tab_export),
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = if (selectedTab == 0) FontWeight.Bold else FontWeight.Normal
+                        )
+                    }
+                )
+                Tab(
+                    selected = selectedTab == 1,
+                    onClick = { selectedTab = 1 },
+                    text = {
+                        Text(
+                            stringResource(R.string.tab_import),
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = if (selectedTab == 1) FontWeight.Bold else FontWeight.Normal
+                        )
+                    }
+                )
             }
 
             // Content
@@ -223,184 +274,209 @@ fun EinstellungenScreen(
                     .fillMaxSize()
                     .verticalScroll(scrollState)
                     .padding(horizontal = 16.dp)
-                    .padding(bottom = 100.dp),
+                    .padding(top = 16.dp, bottom = 100.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Spacer(Modifier.height(8.dp))
-
-                // Export Card
-                EinstellungsKarte(
-                    titel = stringResource(R.string.export_confirm),
-                    beschreibung = stringResource(R.string.export_description),
-                    icon = Icons.Filled.Upload,
-                    iconFarbe = SageGreen,
-                    modifier = Modifier.onGloballyPositioned { coords ->
-                        if (uiState.tutorialStep == TutorialStep.SETTINGS_DATA) {
-                            viewModel.setTargetRect(coords.boundsInWindow())
-                        }
-                    }
-                ) {
-                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        PasswortFeld(
-                            wert = exportPasswort,
-                            onWertChange = { exportPasswort = it },
-                            label = stringResource(R.string.export_password),
-                            sichtbar = exportPasswortSichtbar,
-                        ) {
-                            exportPasswortSichtbar = !exportPasswortSichtbar
-                        }
-                        Button(
-                            onClick = {
-                                if (exportPasswort.isBlank()) return@Button
-                                val fileName = "tageswert_export_${System.currentTimeMillis()}.gtb"
-                                activity?.launchFilePicker(fileName, onExportResult)
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(48.dp),
-                            shape = AppCardDefaults.smallShape,
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                contentColor = MaterialTheme.colorScheme.onPrimary
-                            ),
-                            enabled = exportPasswort.isNotBlank() && !exportLaeuft
-                        ) {
-                            if (exportLaeuft) {
-                                CircularProgressIndicator(
-                                    color = MaterialTheme.colorScheme.onPrimary,
-                                    modifier = Modifier.size(20.dp),
-                                    strokeWidth = 2.dp
-                                )
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Filled.Upload,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(18.dp),
-                                    tint = MaterialTheme.colorScheme.onPrimary
-                                )
-                                Spacer(Modifier.width(6.dp))
-                                Text(
-                                    text = stringResource(R.string.export_confirm),
-                                    color = MaterialTheme.colorScheme.onPrimary
-                                )
+                if (selectedTab == 0) {
+                    // Export Card
+                    EinstellungsKarte(
+                        titel = stringResource(R.string.export_confirm),
+                        beschreibung = stringResource(R.string.export_description),
+                        icon = Icons.Filled.Upload,
+                        iconFarbe = SageGreen,
+                        modifier = Modifier.onGloballyPositioned { coords ->
+                            if (uiState.tutorialStep == TutorialStep.SETTINGS_DATA) {
+                                viewModel.setTargetRect(coords.boundsInWindow())
                             }
                         }
-                    }
-                }
+                    ) {
+                        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                            // Last Export Info
+                            val lastExportText = if (uiState.lastExportTime > 0) {
+                                val sdf = remember { SimpleDateFormat("dd.MM.yyyy, HH:mm", Locale.getDefault()) }
+                                stringResource(R.string.export_last_time, sdf.format(Date(uiState.lastExportTime)))
+                            } else {
+                                stringResource(R.string.export_never)
+                            }
 
-                // Import Card
-                EinstellungsKarte(
-                    titel = stringResource(R.string.import_confirm),
-                    beschreibung = stringResource(R.string.import_description),
-                    icon = Icons.Filled.Download,
-                    iconFarbe = Terracotta
-                ) {
-                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        // File picker
-                        OutlinedButton(
-                            onClick = { dateiPickerLauncher.launch("*/*") },
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = AppCardDefaults.smallShape,
-                            colors = ButtonDefaults.outlinedButtonColors(contentColor = DeepForest)
-                        ) {
-                            Icon(Icons.Filled.FolderOpen, null, Modifier.size(18.dp))
-                            Spacer(Modifier.width(8.dp))
-                            Text(
-                                text = importDateiName.ifBlank { stringResource(R.string.import_file_select) }
-                            )
-                        }
-
-                        PasswortFeld(
-                            wert = importPasswort,
-                            onWertChange = { importPasswort = it },
-                            label = stringResource(R.string.import_password),
-                            sichtbar = importPasswortSichtbar,
-                        ) {
-                            importPasswortSichtbar = !importPasswortSichtbar
-                        }
-
-                        // Warning
-                        Card(
-                            colors = CardDefaults.cardColors(
-                                containerColor = GoldAmber.copy(alpha = 0.12f)
-                            ),
-                            shape = AppCardDefaults.smallShape
-                        ) {
                             Row(
-                                modifier = Modifier.padding(10.dp),
+                                verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                verticalAlignment = Alignment.Top
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(SageGreen.copy(alpha = 0.08f), AppCardDefaults.smallShape)
+                                    .padding(12.dp)
                             ) {
-                                Icon(
-                                    Icons.Filled.Warning,
-                                    null,
-                                    tint = GoldAmber,
-                                    modifier = Modifier.size(16.dp)
-                                )
+                                Icon(Icons.Filled.Visibility, null, tint = SageGreen, modifier = Modifier.size(16.dp))
                                 Text(
-                                    text = stringResource(R.string.import_overwrite_warning),
+                                    text = lastExportText,
                                     style = MaterialTheme.typography.bodySmall,
-                                    color = SlateGray
+                                    color = DeepForest
                                 )
                             }
-                        }
 
-                        Button(
-                            onClick = {
-                                val uri = importUri ?: return@Button
-                                if (importPasswort.isBlank()) return@Button
-                                importLaeuft = true
-                                viewModel.prepareImport(
-                                    context = context,
-                                    uri = uri,
-                                    password = importPasswort,
-                                    onSuccess = { summary ->
-                                        importLaeuft = false
-                                        importSummary = summary
-                                        zeigeImportBestaetigung = true
-                                    },
-                                    onError = { error ->
-                                        importLaeuft = false
-                                        scope.launch {
-                                            snackbarHostState.showSnackbar(error)
-                                        }
-                                    }
-                                )
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(48.dp),
-                            shape = AppCardDefaults.smallShape,
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.secondary,
-                                contentColor = MaterialTheme.colorScheme.onSecondary
-                            ),
-                            enabled = (importUri != null) && importPasswort.isNotBlank() && (!importLaeuft)
-                        ) {
-                            if (importLaeuft) {
-                                CircularProgressIndicator(
-                                    color = MaterialTheme.colorScheme.onSecondary,
-                                    modifier = Modifier.size(20.dp),
-                                    strokeWidth = 2.dp
-                                )
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Filled.Download,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(18.dp),
-                                    tint = MaterialTheme.colorScheme.onSecondary
-                                )
-                                Spacer(Modifier.width(6.dp))
+                            PasswortFeld(
+                                wert = exportPasswort,
+                                onWertChange = { exportPasswort = it },
+                                label = stringResource(R.string.export_password),
+                                sichtbar = exportPasswortSichtbar,
+                            ) {
+                                exportPasswortSichtbar = !exportPasswortSichtbar
+                            }
+
+                            Button(
+                                onClick = {
+                                    if (exportPasswort.isBlank()) return@Button
+                                    val fileName = "tageswert_export_${System.currentTimeMillis()}.gtb"
+                                    activity?.launchFilePicker(fileName, onExportResult)
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(54.dp),
+                                shape = AppCardDefaults.smallShape,
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = SageGreen,
+                                    contentColor = Color.White
+                                ),
+                                enabled = exportPasswort.isNotBlank() && !exportLaeuft
+                            ) {
+                                if (exportLaeuft) {
+                                    CircularProgressIndicator(
+                                        color = Color.White,
+                                        modifier = Modifier.size(20.dp),
+                                        strokeWidth = 2.dp
+                                    )
+                                } else {
+                                    Icon(
+                                        imageVector = Icons.Filled.Upload,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(20.dp),
+                                        tint = Color.White
+                                    )
+                                    Spacer(Modifier.width(8.dp))
+                                    Text(
+                                        text = stringResource(R.string.export_confirm),
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    // Import Card
+                    EinstellungsKarte(
+                        titel = stringResource(R.string.import_confirm),
+                        beschreibung = stringResource(R.string.import_description),
+                        icon = Icons.Filled.Download,
+                        iconFarbe = Terracotta
+                    ) {
+                        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                            // Warning
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = Terracotta.copy(alpha = 0.08f)
+                                ),
+                                shape = AppCardDefaults.smallShape
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(12.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                    verticalAlignment = Alignment.Top
+                                ) {
+                                    Icon(
+                                        Icons.Filled.Warning,
+                                        null,
+                                        tint = Terracotta,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                    Text(
+                                        text = stringResource(R.string.import_overwrite_warning),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = DeepForest
+                                    )
+                                }
+                            }
+
+                            // File picker
+                            OutlinedButton(
+                                onClick = { dateiPickerLauncher.launch("*/*") },
+                                modifier = Modifier.fillMaxWidth().height(48.dp),
+                                shape = AppCardDefaults.smallShape,
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = DeepForest),
+                                border = ButtonDefaults.outlinedButtonBorder(enabled = true).copy(brush = androidx.compose.ui.graphics.SolidColor(DividerColor))
+                            ) {
+                                Icon(Icons.Filled.FolderOpen, null, Modifier.size(18.dp))
+                                Spacer(Modifier.width(8.dp))
                                 Text(
-                                    text = stringResource(R.string.import_confirm),
-                                    color = MaterialTheme.colorScheme.onSecondary
+                                    text = importDateiName.ifBlank { stringResource(R.string.import_file_select) }
                                 )
+                            }
+
+                            PasswortFeld(
+                                wert = importPasswort,
+                                onWertChange = { importPasswort = it },
+                                label = stringResource(R.string.import_password),
+                                sichtbar = importPasswortSichtbar,
+                            ) {
+                                importPasswortSichtbar = !importPasswortSichtbar
+                            }
+
+                            Button(
+                                onClick = {
+                                    val uri = importUri ?: return@Button
+                                    if (importPasswort.isBlank()) return@Button
+                                    importLaeuft = true
+                                    viewModel.prepareImport(
+                                        context = context,
+                                        uri = uri,
+                                        password = importPasswort,
+                                        onSuccess = { summary ->
+                                            importLaeuft = false
+                                            importSummary = summary
+                                            zeigeImportBestaetigung = true
+                                        },
+                                        onError = { error ->
+                                            importLaeuft = false
+                                            scope.launch {
+                                                snackbarHostState.showSnackbar(error)
+                                            }
+                                        }
+                                    )
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(54.dp),
+                                shape = AppCardDefaults.smallShape,
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Terracotta,
+                                    contentColor = Color.White
+                                ),
+                                enabled = (importUri != null) && importPasswort.isNotBlank() && (!importLaeuft)
+                            ) {
+                                if (importLaeuft) {
+                                    CircularProgressIndicator(
+                                        color = Color.White,
+                                        modifier = Modifier.size(20.dp),
+                                        strokeWidth = 2.dp
+                                    )
+                                } else {
+                                    Icon(
+                                        imageVector = Icons.Filled.Download,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(20.dp),
+                                        tint = Color.White
+                                    )
+                                    Spacer(Modifier.width(8.dp))
+                                    Text(
+                                        text = stringResource(R.string.import_confirm),
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
+                                }
                             }
                         }
                     }
                 }
-
-                Spacer(Modifier.height(16.dp))
             }
         }
 
@@ -416,6 +492,7 @@ fun EinstellungenScreen(
         }
 
         // Import Confirmation Dialog
+        val importSuccessText = stringResource(R.string.import_success)
         if (zeigeImportBestaetigung && importSummary != null) {
             val summary = importSummary!!
             AlertDialog(
@@ -444,7 +521,7 @@ fun EinstellungenScreen(
                                 importPasswort = ""
                                 importSummary = null
                                 scope.launch {
-                                    snackbarHostState.showSnackbar(context.getString(R.string.import_success))
+                                    snackbarHostState.showSnackbar(importSuccessText)
                                 }
                             }
                         },
@@ -462,23 +539,6 @@ fun EinstellungenScreen(
                 containerColor = Surface
             )
         }
-    }
-}
-
-@Composable
-fun SektionsKopf(text: String, icon: ImageVector) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp)
-    ) {
-        Icon(icon, null, tint = Color.White.copy(alpha = 0.9f), modifier = Modifier.size(18.dp))
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelLarge,
-            color = Color.White.copy(alpha = 0.9f),
-            fontWeight = FontWeight.Bold
-        )
     }
 }
 

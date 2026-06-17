@@ -328,7 +328,7 @@ fun HauptScreen(
                             )
                             Spacer(Modifier.width(8.dp))
                             Text(
-                                text = stringResource(R.string.settings_title),
+                                text = stringResource(R.string.settings_import_export),
                                 style = MaterialTheme.typography.labelLarge
                             )
                         }

@@ -46,6 +46,8 @@
     <string name="export_confirm">Exportieren</string>
     <string name="export_success">Export erfolgreich gespeichert</string>
     <string name="export_error">Fehler beim Exportieren</string>
+    <string name="export_last_time">Letzter Export: %1$s</string>
+    <string name="export_never">Bisher kein Export erstellt</string>
     <string name="export_reminder_title">Sicherung empfohlen</string>
     <string name="export_reminder_text">Dein letzter Export ist über 30 Tage her. Deine Daten werden nur lokal gespeichert und sind biometrisch verschlüsselt. Sollten sich deine Fingerabdrücke ändern, werden die lokalen Daten unbrauchbar. Bitte exportiere regelmässig eine Sicherung.</string>
 
@@ -60,8 +62,10 @@
     <string name="import_summary_confirm">Jetzt überschreiben</string>
 
     <!-- Settings -->
-    <string name="settings_title">Import / Export</string>
+    <string name="settings_import_export">Import / Export</string>
     <string name="data_management">Datenverwaltung</string>
+    <string name="tab_export">Export</string>
+    <string name="tab_import">Import</string>
 
     <!-- Password -->
     <string name="password_show">Passwort anzeigen</string>
