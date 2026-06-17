@@ -180,9 +180,6 @@ fun EinstellungenScreen(
             ) {
                 Spacer(Modifier.height(8.dp))
 
-                // Section: Datenverwaltung
-                SektionsKopf(text = stringResource(R.string.data_management), icon = Icons.Filled.Storage)
-
                 // Export Card
                 EinstellungsKarte(
                     titel = stringResource(R.string.export_confirm),

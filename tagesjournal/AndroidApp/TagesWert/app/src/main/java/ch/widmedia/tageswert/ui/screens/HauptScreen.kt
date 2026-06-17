@@ -10,7 +10,7 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.RestartAlt
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -128,7 +128,6 @@ fun HauptScreen(
                 ) {
                     Column {
                         AppHeader(
-                            onEinstellungen = onEinstellungen,
                             onLock = onLock
                         )
                         Spacer(Modifier.height(8.dp))
@@ -160,122 +159,142 @@ fun HauptScreen(
                 Spacer(Modifier.height(16.dp))
 
                 // Lower Part: Summary
-                Box(
+                Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 32.dp)
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 32.dp),
+                    shape = AppCardDefaults.largeShape,
+                    colors = AppCardDefaults.colors(),
+                    elevation = AppCardDefaults.defaultElevation()
                 ) {
-                    if (alleEintraege.isEmpty()) {
-                        LeererZustand(
-                            modifier = Modifier.padding(horizontal = 20.dp, vertical = 32.dp)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = stringResource(R.string.data_management),
+                            style = MaterialTheme.typography.titleSmall,
+                            color = DeepForest,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.align(Alignment.Start)
                         )
-                    } else {
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                            shape = AppCardDefaults.largeShape,
-                            colors = AppCardDefaults.colors(),
-                            elevation = AppCardDefaults.defaultElevation()
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(24.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                // ... same export reminder code ...
-                                // Export Reminder
-                                val thirtyDaysMillis = 30L * 24 * 60 * 60 * 1000
-                                val isOlderThan30Days = (System.currentTimeMillis() - uiState.lastExportTime) > thirtyDaysMillis
-                                val firstStartOlderThan30Days = (System.currentTimeMillis() - uiState.firstStartTime) > thirtyDaysMillis
-                                
-                                if (isOlderThan30Days && firstStartOlderThan30Days) {
-                                    Card(
-                                        modifier = Modifier
-                                            .padding(bottom = 16.dp)
-                                            .fillMaxWidth(),
-                                        shape = AppCardDefaults.shape,
-                                        colors = CardDefaults.cardColors(
-                                            containerColor = GoldAmber.copy(alpha = 0.1f)
-                                        ),
-                                        border = androidx.compose.foundation.BorderStroke(1.dp, GoldAmber.copy(alpha = 0.2f))
+                        
+                        Spacer(Modifier.height(16.dp))
+
+                        if (alleEintraege.isEmpty()) {
+                            LeererZustand(
+                                onDarkBackground = false,
+                                modifier = Modifier.padding(vertical = 16.dp)
+                            )
+                        } else {
+                            // Export Reminder
+                            val thirtyDaysMillis = 30L * 24 * 60 * 60 * 1000
+                            val isOlderThan30Days = (System.currentTimeMillis() - uiState.lastExportTime) > thirtyDaysMillis
+                            val firstStartOlderThan30Days = (System.currentTimeMillis() - uiState.firstStartTime) > thirtyDaysMillis
+                            
+                            if (isOlderThan30Days && firstStartOlderThan30Days) {
+                                Card(
+                                    modifier = Modifier
+                                        .padding(bottom = 16.dp)
+                                        .fillMaxWidth(),
+                                    shape = AppCardDefaults.shape,
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = GoldAmber.copy(alpha = 0.1f)
+                                    ),
+                                    border = androidx.compose.foundation.BorderStroke(1.dp, GoldAmber.copy(alpha = 0.2f))
+                                ) {
+                                    Column(
+                                        modifier = Modifier.padding(16.dp),
+                                        verticalArrangement = Arrangement.spacedBy(8.dp)
                                     ) {
-                                        Column(
-                                            modifier = Modifier.padding(16.dp),
-                                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(8.dp)
                                         ) {
-                                            Row(
-                                                verticalAlignment = Alignment.CenterVertically,
-                                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                            ) {
-                                                Icon(
-                                                    imageVector = Icons.Filled.Warning,
-                                                    contentDescription = null,
-                                                    tint = GoldAmber,
-                                                    modifier = Modifier.size(20.dp)
-                                                )
-                                                Text(
-                                                    text = stringResource(R.string.export_reminder_title),
-                                                    style = MaterialTheme.typography.titleSmall,
-                                                    color = DeepForest,
-                                                    fontWeight = FontWeight.Bold
-                                                )
-                                            }
-                                            Text(
-                                                text = stringResource(R.string.export_reminder_text),
-                                                style = MaterialTheme.typography.bodySmall,
-                                                color = SlateGray,
-                                                lineHeight = 18.sp
+                                            Icon(
+                                                imageVector = Icons.Filled.Warning,
+                                                contentDescription = null,
+                                                tint = GoldAmber,
+                                                modifier = Modifier.size(20.dp)
                                             )
-                                            TextButton(
-                                                onClick = onEinstellungen,
-                                                contentPadding = PaddingValues(0.dp),
-                                                modifier = Modifier.align(Alignment.End)
-                                            ) {
-                                                Text(
-                                                    text = stringResource(R.string.export_confirm),
-                                                    style = MaterialTheme.typography.labelLarge,
-                                                    color = SageGreen
-                                                )
-                                                Icon(
-                                                    imageVector = Icons.Default.Settings,
-                                                    contentDescription = null,
-                                                    modifier = Modifier.size(16.dp).padding(start = 4.dp),
-                                                    tint = SageGreen
-                                                )
-                                            }
+                                            Text(
+                                                text = stringResource(R.string.export_reminder_title),
+                                                style = MaterialTheme.typography.titleSmall,
+                                                color = DeepForest,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
+                                        Text(
+                                            text = stringResource(R.string.export_reminder_text),
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = SlateGray,
+                                            lineHeight = 18.sp
+                                        )
+                                        TextButton(
+                                            onClick = onEinstellungen,
+                                            contentPadding = PaddingValues(0.dp),
+                                            modifier = Modifier.align(Alignment.End)
+                                        ) {
+                                            Text(
+                                                text = stringResource(R.string.export_confirm),
+                                                style = MaterialTheme.typography.labelLarge,
+                                                color = SageGreen
+                                            )
+                                            Icon(
+                                                imageVector = Icons.Default.SwapVert,
+                                                contentDescription = null,
+                                                modifier = Modifier.size(16.dp).padding(start = 4.dp),
+                                                tint = SageGreen
+                                            )
                                         }
                                     }
                                 }
-
-                                Text(
-                                    text = stringResource(R.string.total_entries_count, alleEintraege.size),
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    color = SlateGray,
-                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                                )
-
-                                Spacer(Modifier.height(16.dp))
-
-                                Button(
-                                    onClick = onAlleEintraege,
-                                    colors = ButtonDefaults.buttonColors(containerColor = SageGreen),
-                                    shape = AppCardDefaults.smallShape,
-                                    contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.DateRange,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(20.dp)
-                                    )
-                                    Spacer(Modifier.width(8.dp))
-                                    Text(
-                                        text = stringResource(R.string.show_all_entries),
-                                        style = MaterialTheme.typography.labelLarge
-                                    )
-                                }
                             }
+
+                            Button(
+                                onClick = onAlleEintraege,
+                                colors = ButtonDefaults.buttonColors(containerColor = SageGreen),
+                                shape = AppCardDefaults.smallShape,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(48.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.DateRange,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    text = stringResource(R.string.show_all_entries, alleEintraege.size),
+                                    style = MaterialTheme.typography.labelLarge
+                                )
+                            }
+                        }
+
+                        Spacer(Modifier.height(12.dp))
+
+                        Button(
+                            onClick = onEinstellungen,
+                            colors = ButtonDefaults.buttonColors(containerColor = SageGreen),
+                            shape = AppCardDefaults.smallShape,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(48.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.SwapVert,
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text(
+                                text = stringResource(R.string.settings_title),
+                                style = MaterialTheme.typography.labelLarge
+                            )
                         }
                     }
                 }
@@ -322,7 +341,7 @@ fun HauptScreen(
                             Icon(
                                 imageVector = Icons.Default.RestartAlt,
                                 contentDescription = null,
-                                modifier = Modifier.size(18.dp),
+                                modifier = Modifier.size(20.dp),
                                 tint = Color.White
                             )
                             Spacer(Modifier.width(8.dp))
@@ -373,7 +392,7 @@ fun HauptScreen(
 }
 
 @Composable
-fun AppHeader(onEinstellungen: () -> Unit, onLock: () -> Unit) {
+fun AppHeader(onLock: () -> Unit) {
     var isLocking by remember { mutableStateOf(false) }
 
     LaunchedEffect(isLocking) {
@@ -420,18 +439,6 @@ fun AppHeader(onEinstellungen: () -> Unit, onLock: () -> Unit) {
                                 tint = Color.White
                             )
                         }
-                    }
-                    IconButton(
-                        onClick = onEinstellungen,
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .background(Color.White.copy(alpha = 0.15f))
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Settings,
-                            contentDescription = stringResource(R.string.settings_title),
-                            tint = Color.White
-                        )
                     }
                 }
             }
@@ -507,7 +514,7 @@ fun StatistikSektion(statistiken: List<MonatsStatistik>, modifier: Modifier = Mo
 }
 
 @Composable
-fun LeererZustand(modifier: Modifier = Modifier) {
+fun LeererZustand(onDarkBackground: Boolean = true, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -515,19 +522,19 @@ fun LeererZustand(modifier: Modifier = Modifier) {
     ) {
         Text(
             text = "🌱",
-            fontSize = 48.sp
+            fontSize = if (onDarkBackground) 48.sp else 40.sp
         )
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(if (onDarkBackground) 12.dp else 8.dp))
         Text(
             text = stringResource(R.string.no_entries),
             style = MaterialTheme.typography.titleMedium,
-            color = Color.White.copy(alpha = 0.9f)
+            color = if (onDarkBackground) Color.White.copy(alpha = 0.9f) else DeepForest
         )
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(if (onDarkBackground) 6.dp else 4.dp))
         Text(
             text = stringResource(R.string.no_entries_hint),
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.White.copy(alpha = 0.7f),
+            color = if (onDarkBackground) Color.White.copy(alpha = 0.7f) else SlateGray,
             textAlign = androidx.compose.ui.text.style.TextAlign.Center
         )
     }
