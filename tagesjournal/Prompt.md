@@ -3,20 +3,16 @@
 ## Refinement
 This list is updated as soon as the stuff works, only the next few points (TODOs) are listed 
 1. re-think the picture-in-picture mode. Not really a use case, app should close or go into the background.  
+   is there a way to have picture-in-picture mode enabled (to satisfy the app store requirement) but close the app as soon as the picture-in-picture mode is activated?
 1. change the button design. Make it a bit more lighter, more elegant. Do this for all the buttons.  
-1. clean up the code. Check for newer stable versions of dependencies and in general reduce the number of imports and dependencies.  
+1. clean up the code. Check for newer stable versions of dependencies and try to reduce the number of imports and dependencies.  
+1. fix all the build warnings.  
 1. try out some different UIs / colors. TODO: maybe with another tool (figma)
 1. have the lock symbol more prominent (TODO: decide how)
 
 
 ## Webpage
 1. Manually: change the texts. 
-
-
-
-
-## GIT re-org
-1. test on second workspace
 
 
 ## App store
