@@ -1,10 +1,14 @@
 package ch.widmedia.tageswert.ui.theme
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -198,8 +202,8 @@ object AppCardDefaults {
     
     val shape = RoundedCornerShape(cornerRadius)
     val largeShape = RoundedCornerShape(largeCornerRadius)
-    val smallShape = RoundedCornerShape(smallCornerRadius)
-    
+    val smallShape = RoundedCornerShape(16.dp)
+
     @Composable
     fun colors() = androidx.compose.material3.CardDefaults.cardColors(
         containerColor = CardBg
@@ -213,5 +217,38 @@ object AppCardDefaults {
     @Composable
     fun highElevation() = androidx.compose.material3.CardDefaults.cardElevation(
         defaultElevation = 8.dp
+    )
+}
+
+/**
+ * Custom Button design for the App.
+ * Outlined, elegant, with dark green border by default.
+ */
+@Composable
+fun AppButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    containerColor: Color = Color.White.copy(alpha = 0.12f),
+    contentColor: Color = DeepForest,
+    borderColor: Color = DeepForest,
+    content: @Composable RowScope.() -> Unit
+) {
+    OutlinedButton(
+        onClick = onClick,
+        modifier = modifier,
+        enabled = enabled,
+        shape = AppCardDefaults.smallShape,
+        colors = ButtonDefaults.outlinedButtonColors(
+            containerColor = containerColor,
+            contentColor = if (enabled) contentColor else contentColor.copy(alpha = 0.4f),
+            disabledContainerColor = Color.White.copy(alpha = 0.05f),
+            disabledContentColor = contentColor.copy(alpha = 0.4f)
+        ),
+        border = BorderStroke(
+            0.8.dp,
+            if (enabled) borderColor else borderColor.copy(alpha = 0.3f)
+        ),
+        content = content
     )
 }

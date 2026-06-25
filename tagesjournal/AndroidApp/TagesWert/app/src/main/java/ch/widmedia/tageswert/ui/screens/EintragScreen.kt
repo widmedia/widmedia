@@ -63,6 +63,7 @@ import ch.widmedia.tageswert.ui.MainViewModel
 import ch.widmedia.tageswert.ui.TutorialStep
 import ch.widmedia.tageswert.ui.components.BewertungsSlider
 import ch.widmedia.tageswert.ui.components.TutorialOverlay
+import ch.widmedia.tageswert.ui.theme.AppButton
 import ch.widmedia.tageswert.ui.theme.AppCardDefaults
 import ch.widmedia.tageswert.ui.theme.DeepForest
 import ch.widmedia.tageswert.ui.theme.DividerColor
@@ -125,25 +126,24 @@ fun EintragScreen(
                 )
             },
             confirmButton = {
-                Button(
+                AppButton(
                     onClick = {
                         showDeleteDialog = false
                         viewModel.loeschen(eintrag) { onZurueck() }
                     },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.error,
-                        contentColor = Color.White
-                    )
+                    containerColor = ErrorRed.copy(alpha = 0.1f),
+                    contentColor = ErrorRed,
+                    borderColor = ErrorRed
                 ) {
                     Text(
                         text = stringResource(R.string.delete),
-                        color = Color.White
+                        color = ErrorRed
                     )
                 }
             },
             dismissButton = {
-                OutlinedButton(onClick = { showDeleteDialog = false }) {
-                    Text(stringResource(R.string.cancel))
+                AppButton(onClick = { showDeleteDialog = false }) {
+                    Text(stringResource(R.string.cancel), color = DeepForest)
                 }
             },
             containerColor = Surface,
@@ -309,7 +309,7 @@ fun EintragScreen(
                         Column(
                             modifier = Modifier.padding(20.dp)
                         ) {
-                            Button(
+                            AppButton(
                                 onClick = {
                                     viewModel.speichern(eintrag) { onZurueck() }
                                 },
@@ -320,23 +320,19 @@ fun EintragScreen(
                                         if (uiState.tutorialStep == TutorialStep.SAVE) {
                                             viewModel.setTargetRect(coords.boundsInWindow())
                                         }
-                                    },
-                                shape = AppCardDefaults.shape,
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = MaterialTheme.colorScheme.primary,
-                                    contentColor = MaterialTheme.colorScheme.onPrimary
-                                )
+                                    }
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Check,
                                     contentDescription = null,
-                                    modifier = Modifier.size(20.dp)
+                                    modifier = Modifier.size(20.dp),
+                                    tint = DeepForest
                                 )
                                 Spacer(Modifier.width(8.dp))
                                 Text(
                                     text = stringResource(R.string.save),
                                     style = MaterialTheme.typography.titleMedium,
-                                    color = Color.White,
+                                    color = DeepForest,
                                     fontWeight = FontWeight.Normal
                                 )
                             }

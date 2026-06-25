@@ -64,6 +64,7 @@ import ch.widmedia.tageswert.ui.MonatsStatistik
 import ch.widmedia.tageswert.ui.TutorialStep
 import ch.widmedia.tageswert.ui.components.MonatsKalender
 import ch.widmedia.tageswert.ui.components.TutorialOverlay
+import ch.widmedia.tageswert.ui.theme.AppButton
 import ch.widmedia.tageswert.ui.theme.AppCardDefaults
 import ch.widmedia.tageswert.ui.theme.DeepForest
 import ch.widmedia.tageswert.ui.theme.DividerColor
@@ -290,10 +291,8 @@ fun HauptScreen(
                                 }
                             }
 
-                            Button(
+                            AppButton(
                                 onClick = onAlleEintraege,
-                                colors = ButtonDefaults.buttonColors(containerColor = SageGreen),
-                                shape = AppCardDefaults.smallShape,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(48.dp)
@@ -301,22 +300,22 @@ fun HauptScreen(
                                 Icon(
                                     imageVector = Icons.Default.DateRange,
                                     contentDescription = null,
-                                    modifier = Modifier.size(20.dp)
+                                    modifier = Modifier.size(20.dp),
+                                    tint = DeepForest
                                 )
                                 Spacer(Modifier.width(8.dp))
                                 Text(
                                     text = stringResource(R.string.show_all_entries, alleEintraege.size),
-                                    style = MaterialTheme.typography.labelLarge
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = DeepForest
                                 )
                             }
                         }
 
                         Spacer(Modifier.height(12.dp))
 
-                        Button(
+                        AppButton(
                             onClick = onEinstellungen,
-                            colors = ButtonDefaults.buttonColors(containerColor = SageGreen),
-                            shape = AppCardDefaults.smallShape,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(48.dp)
@@ -324,12 +323,14 @@ fun HauptScreen(
                             Icon(
                                 imageVector = Icons.Default.SwapVert,
                                 contentDescription = null,
-                                modifier = Modifier.size(20.dp)
+                                modifier = Modifier.size(20.dp),
+                                tint = DeepForest
                             )
                             Spacer(Modifier.width(8.dp))
                             Text(
                                 text = stringResource(R.string.settings_import_export),
-                                style = MaterialTheme.typography.labelLarge
+                                style = MaterialTheme.typography.labelLarge,
+                                color = DeepForest
                             )
                         }
                     }
@@ -358,7 +359,7 @@ fun HauptScreen(
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(Modifier.height(16.dp))
-                        Button(
+                        AppButton(
                             onClick = { viewModel.restartTutorial(context) },
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -367,23 +368,19 @@ fun HauptScreen(
                                     if (uiState.tutorialStep == TutorialStep.RESTART_INFO) {
                                         viewModel.setTargetRect(coords.boundsInWindow())
                                     }
-                                },
-                            shape = AppCardDefaults.smallShape,
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = SageGreen,
-                                contentColor = Color.White
-                            )
+                                }
                         ) {
                             Icon(
                                 imageVector = Icons.Default.RestartAlt,
                                 contentDescription = null,
                                 modifier = Modifier.size(20.dp),
-                                tint = Color.White
+                                tint = DeepForest
                             )
                             Spacer(Modifier.width(8.dp))
                             Text(
                                 text = stringResource(R.string.restart_tutorial),
-                                style = MaterialTheme.typography.labelLarge
+                                style = MaterialTheme.typography.labelLarge,
+                                color = DeepForest
                             )
                         }
                     }

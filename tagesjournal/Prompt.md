@@ -2,9 +2,12 @@
 
 ## Refinement
 This list is updated as soon as the stuff works, only the next few points (TODOs) are listed 
-1. re-think the picture-in-picture mode. Not really a use case, app should close or go into the background.  
-   is there a way to have picture-in-picture mode enabled (to satisfy the app store requirement) but close the app as soon as the picture-in-picture mode is activated?
-1. change the button design. Make it a bit more lighter, more elegant. Do this for all the buttons.  
+1. there are different font sizes in use at the various buttons. Define the button design only in one place. This includes font color and font size, background color, icon color, border color, border thickness and edge rounding as well as padding.
+Reference this wherever a button is implemented.  
+1. (maybe) use another color for the button outline. Something dark-blueish.  
+1. After 'Tutorial überspringen', one needs to be on the HauptScreen again. This is not always true, e.g. in step 2.  
+1. (maybe) apply the material 3 expressive design to the app
+1. (maybe) enable previews for the UI screens
 1. clean up the code. Check for newer stable versions of dependencies and try to reduce the number of imports and dependencies.  
 1. fix all the build warnings.  
 1. try out some different UIs / colors. TODO: maybe with another tool (figma)
@@ -23,6 +26,7 @@ This list is updated as soon as the stuff works, only the next few points (TODOs
 
 ---
 ## Won't do
+- ignore the PiP warning. Will not implement PiP behavior, there is no meaningful usecase for it.  
 - Does not work, probably Android/Samsung specific: 
   on the Sperrscreen: always have the 3 standard android buttons visible (back/home/overview)
 - Does not work due to sqlcipher usage:  

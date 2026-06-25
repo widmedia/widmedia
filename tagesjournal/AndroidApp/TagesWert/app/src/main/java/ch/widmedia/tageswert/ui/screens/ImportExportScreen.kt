@@ -83,6 +83,7 @@ import ch.widmedia.tageswert.ui.ImportSummary
 import ch.widmedia.tageswert.ui.MainViewModel
 import ch.widmedia.tageswert.ui.TutorialStep
 import ch.widmedia.tageswert.ui.components.TutorialOverlay
+import ch.widmedia.tageswert.ui.theme.AppButton
 import ch.widmedia.tageswert.ui.theme.AppCardDefaults
 import ch.widmedia.tageswert.ui.theme.DeepForest
 import ch.widmedia.tageswert.ui.theme.DividerColor
@@ -355,25 +356,20 @@ fun ImportExportScreen(
                                 exportPasswortSichtbar = !exportPasswortSichtbar
                             }
 
-                            Button(
+                            AppButton(
                                 onClick = {
-                                    if (exportPasswort.isBlank()) return@Button
+                                    if (exportPasswort.isBlank()) return@AppButton
                                     val fileName = "tageswert_export_${System.currentTimeMillis()}.gtb"
                                     activity?.launchFilePicker(fileName, onExportResult)
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(54.dp),
-                                shape = AppCardDefaults.smallShape,
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = SageGreen,
-                                    contentColor = Color.White
-                                ),
                                 enabled = exportPasswort.isNotBlank() && !exportLaeuft
                             ) {
                                 if (exportLaeuft) {
                                     CircularProgressIndicator(
-                                        color = Color.White,
+                                        color = DeepForest,
                                         modifier = Modifier.size(20.dp),
                                         strokeWidth = 2.dp
                                     )
@@ -382,12 +378,13 @@ fun ImportExportScreen(
                                         imageVector = Icons.Filled.Upload,
                                         contentDescription = null,
                                         modifier = Modifier.size(20.dp),
-                                        tint = Color.White
+                                        tint = DeepForest
                                     )
                                     Spacer(Modifier.width(8.dp))
                                     Text(
                                         text = stringResource(R.string.export_confirm),
-                                        style = MaterialTheme.typography.titleMedium
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = DeepForest
                                     )
                                 }
                             }
@@ -430,17 +427,15 @@ fun ImportExportScreen(
                             }
 
                             // File picker
-                            OutlinedButton(
+                            AppButton(
                                 onClick = { dateiPickerLauncher.launch("*/*") },
-                                modifier = Modifier.fillMaxWidth().height(48.dp),
-                                shape = AppCardDefaults.smallShape,
-                                colors = ButtonDefaults.outlinedButtonColors(contentColor = DeepForest),
-                                border = ButtonDefaults.outlinedButtonBorder(enabled = true).copy(brush = androidx.compose.ui.graphics.SolidColor(DividerColor))
+                                modifier = Modifier.fillMaxWidth().height(48.dp)
                             ) {
-                                Icon(Icons.Filled.FolderOpen, null, Modifier.size(18.dp))
+                                Icon(Icons.Filled.FolderOpen, null, Modifier.size(18.dp), tint = DeepForest)
                                 Spacer(Modifier.width(8.dp))
                                 Text(
-                                    text = importDateiName.ifBlank { stringResource(R.string.import_file_select) }
+                                    text = importDateiName.ifBlank { stringResource(R.string.import_file_select) },
+                                    color = DeepForest
                                 )
                             }
 
@@ -453,10 +448,10 @@ fun ImportExportScreen(
                                 importPasswortSichtbar = !importPasswortSichtbar
                             }
 
-                            Button(
+                            AppButton(
                                 onClick = {
-                                    val uri = importUri ?: return@Button
-                                    if (importPasswort.isBlank()) return@Button
+                                    val uri = importUri ?: return@AppButton
+                                    if (importPasswort.isBlank()) return@AppButton
                                     importLaeuft = true
                                     viewModel.prepareImport(
                                         context = context,
@@ -478,16 +473,11 @@ fun ImportExportScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(54.dp),
-                                shape = AppCardDefaults.smallShape,
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = Terracotta,
-                                    contentColor = Color.White
-                                ),
                                 enabled = (importUri != null) && importPasswort.isNotBlank() && (!importLaeuft)
                             ) {
                                 if (importLaeuft) {
                                     CircularProgressIndicator(
-                                        color = Color.White,
+                                        color = DeepForest,
                                         modifier = Modifier.size(20.dp),
                                         strokeWidth = 2.dp
                                     )
@@ -496,12 +486,13 @@ fun ImportExportScreen(
                                         imageVector = Icons.Filled.Download,
                                         contentDescription = null,
                                         modifier = Modifier.size(20.dp),
-                                        tint = Color.White
+                                        tint = DeepForest
                                     )
                                     Spacer(Modifier.width(8.dp))
                                     Text(
                                         text = stringResource(R.string.import_confirm),
-                                        style = MaterialTheme.typography.titleMedium
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = DeepForest
                                     )
                                 }
                             }
@@ -541,7 +532,7 @@ fun ImportExportScreen(
                     )
                 },
                 confirmButton = {
-                    Button(
+                    AppButton(
                         onClick = {
                             zeigeImportBestaetigung = false
                             importLaeuft = true
@@ -553,10 +544,9 @@ fun ImportExportScreen(
                                 importSummary = null
                                 successMessageToShow = successMessage
                             }
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = Terracotta)
+                        }
                     ) {
-                        Text(stringResource(R.string.import_summary_confirm))
+                        Text(stringResource(R.string.import_summary_confirm), color = DeepForest)
                     }
                 },
                 dismissButton = {

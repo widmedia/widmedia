@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import ch.widmedia.tageswert.R
 import ch.widmedia.tageswert.ui.MainViewModel
 import ch.widmedia.tageswert.ui.components.EintragKarte
+import ch.widmedia.tageswert.ui.theme.AppButton
 import ch.widmedia.tageswert.ui.theme.AppCardDefaults
 import ch.widmedia.tageswert.ui.theme.DeepForest
 import ch.widmedia.tageswert.ui.theme.SlateGray
@@ -213,14 +214,15 @@ fun DeleteAllWarningCard(
                     )
                 }
                 Spacer(modifier = Modifier.width(8.dp))
-                Button(
+                AppButton(
                     onClick = onConfirm,
-                    colors = ButtonDefaults.buttonColors(containerColor = Terracotta),
-                    shape = AppCardDefaults.smallShape
+                    containerColor = Color.White,
+                    contentColor = Terracotta,
+                    borderColor = Terracotta
                 ) {
                     Text(
                         text = stringResource(R.string.delete_all),
-                        color = Color.White
+                        color = Terracotta
                     )
                 }
             }

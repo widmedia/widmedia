@@ -46,7 +46,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.widmedia.tageswert.R
+import ch.widmedia.tageswert.ui.theme.AppButton
 import ch.widmedia.tageswert.ui.theme.AppCardDefaults
+import ch.widmedia.tageswert.ui.theme.DeepForest
 import ch.widmedia.tageswert.ui.theme.ErrorRed
 import ch.widmedia.tageswert.ui.theme.GoldAmber
 import ch.widmedia.tageswert.ui.theme.MossLight
@@ -199,16 +201,13 @@ fun SperrScreen(
             Spacer(Modifier.height(16.dp))
 
             // Unlock Button
-            Button(
+            AppButton(
                 onClick = onTriggerAuth,
                 modifier = Modifier
                     .fillMaxWidth(0.75f)
                     .height(52.dp),
-                shape = AppCardDefaults.shape,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.White.copy(alpha = 0.2f),
-                    contentColor = Color.White
-                ),
+                contentColor = Color.White,
+                borderColor = DeepForest,
                 enabled = (authStatus != AuthStatus.SCANNING) && (authStatus != AuthStatus.SUCCESS)
             ) {
                 Text(

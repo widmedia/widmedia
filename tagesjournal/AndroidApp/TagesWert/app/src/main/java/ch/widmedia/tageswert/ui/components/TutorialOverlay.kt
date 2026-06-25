@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.widmedia.tageswert.R
 import ch.widmedia.tageswert.ui.TutorialStep
+import ch.widmedia.tageswert.ui.theme.AppButton
 import ch.widmedia.tageswert.ui.theme.AppCardDefaults
 import ch.widmedia.tageswert.ui.theme.DeepForest
 import ch.widmedia.tageswert.ui.theme.SageGreen
@@ -276,14 +277,12 @@ private fun TutorialCard(
                     }
                 }
 
-                Button(
+                AppButton(
                     onClick = onNext,
-                    colors = ButtonDefaults.buttonColors(containerColor = SageGreen),
-                    shape = AppCardDefaults.smallShape
                 ) {
                     Text(
                         text = if (isLastStep) stringResource(R.string.tutorial_finish) else stringResource(R.string.intro_next),
-                        color = Color.White,
+                        color = DeepForest,
                         style = MaterialTheme.typography.labelLarge
                     )
                     if (!isLastStep) {
@@ -291,7 +290,7 @@ private fun TutorialCard(
                             imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                             contentDescription = null,
                             modifier = Modifier.size(16.dp).padding(start = 4.dp),
-                            tint = Color.White
+                            tint = DeepForest
                         )
                     }
                 }
