@@ -1,7 +1,8 @@
 # Prompt
 
 ## Refinement
-1. there are different font sizes in use at the various buttons. Define the button design only in one place. Reference this wherever a button is implemented.  
+1. there are different font sizes in use at the various buttons. Define the button design only in one place. This includes font color and font size, background color, icon color, border color, border thickness and edge rounding as well as padding.
+Reference this wherever a button is implemented.  
 1. (maybe) use another color for the button outline. Something dark-blueish.  
 1. After 'Tutorial überspringen', one needs to be on the HauptScreen again. This is not always true, e.g. in step 2.  
 1. (maybe) apply the material 3 expressive design to the app
