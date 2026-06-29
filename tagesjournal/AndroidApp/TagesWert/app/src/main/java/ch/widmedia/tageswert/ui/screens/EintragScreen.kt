@@ -135,15 +135,12 @@ fun EintragScreen(
                     contentColor = ErrorRed,
                     borderColor = ErrorRed
                 ) {
-                    Text(
-                        text = stringResource(R.string.delete),
-                        color = ErrorRed
-                    )
+                    Text(text = stringResource(R.string.delete))
                 }
             },
             dismissButton = {
                 AppButton(onClick = { showDeleteDialog = false }) {
-                    Text(stringResource(R.string.cancel), color = DeepForest)
+                    Text(stringResource(R.string.cancel))
                 }
             },
             containerColor = Surface,
@@ -325,16 +322,10 @@ fun EintragScreen(
                                 Icon(
                                     imageVector = Icons.Filled.Check,
                                     contentDescription = null,
-                                    modifier = Modifier.size(20.dp),
-                                    tint = DeepForest
+                                    modifier = Modifier.size(20.dp)
                                 )
                                 Spacer(Modifier.width(8.dp))
-                                Text(
-                                    text = stringResource(R.string.save),
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = DeepForest,
-                                    fontWeight = FontWeight.Normal
-                                )
+                                Text(text = stringResource(R.string.save))
                             }
                         }
                     }

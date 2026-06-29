@@ -207,11 +207,8 @@ fun DeleteAllWarningCard(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TextButton(onClick = onCancel) {
-                    Text(
-                        text = stringResource(R.string.cancel),
-                        color = SlateGray
-                    )
+                AppButton(onClick = onCancel) {
+                    Text(text = stringResource(R.string.cancel))
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 AppButton(
@@ -220,10 +217,7 @@ fun DeleteAllWarningCard(
                     contentColor = Terracotta,
                     borderColor = Terracotta
                 ) {
-                    Text(
-                        text = stringResource(R.string.delete_all),
-                        color = Terracotta
-                    )
+                    Text(text = stringResource(R.string.delete_all))
                 }
             }
         }

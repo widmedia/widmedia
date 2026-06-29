@@ -268,12 +268,8 @@ private fun TutorialCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (!isLastStep) {
-                    TextButton(onClick = onSkip) {
-                        Text(
-                            text = stringResource(R.string.intro_skip),
-                            color = Color.Gray,
-                            style = MaterialTheme.typography.labelLarge
-                        )
+                    AppButton(onClick = onSkip) {
+                        Text(text = stringResource(R.string.intro_skip))
                     }
                 }
 
@@ -281,16 +277,13 @@ private fun TutorialCard(
                     onClick = onNext,
                 ) {
                     Text(
-                        text = if (isLastStep) stringResource(R.string.tutorial_finish) else stringResource(R.string.intro_next),
-                        color = DeepForest,
-                        style = MaterialTheme.typography.labelLarge
+                        text = if (isLastStep) stringResource(R.string.tutorial_finish) else stringResource(R.string.intro_next)
                     )
                     if (!isLastStep) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                             contentDescription = null,
-                            modifier = Modifier.size(16.dp).padding(start = 4.dp),
-                            tint = DeepForest
+                            modifier = Modifier.size(16.dp).padding(start = 4.dp)
                         )
                     }
                 }

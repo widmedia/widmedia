@@ -270,21 +270,14 @@ fun HauptScreen(
                                             color = SlateGray,
                                             lineHeight = 18.sp
                                         )
-                                        TextButton(
+                                        AppButton(
                                             onClick = onEinstellungen,
-                                            contentPadding = PaddingValues(0.dp),
-                                            modifier = Modifier.align(Alignment.End)
                                         ) {
-                                            Text(
-                                                text = stringResource(R.string.export_confirm),
-                                                style = MaterialTheme.typography.labelLarge,
-                                                color = SageGreen
-                                            )
+                                            Text(text = stringResource(R.string.export_confirm))
                                             Icon(
                                                 imageVector = Icons.Default.SwapVert,
                                                 contentDescription = null,
-                                                modifier = Modifier.size(16.dp).padding(start = 4.dp),
-                                                tint = SageGreen
+                                                modifier = Modifier.size(16.dp).padding(start = 4.dp)
                                             )
                                         }
                                     }
@@ -300,15 +293,10 @@ fun HauptScreen(
                                 Icon(
                                     imageVector = Icons.Default.DateRange,
                                     contentDescription = null,
-                                    modifier = Modifier.size(20.dp),
-                                    tint = DeepForest
+                                    modifier = Modifier.size(20.dp)
                                 )
                                 Spacer(Modifier.width(8.dp))
-                                Text(
-                                    text = stringResource(R.string.show_all_entries, alleEintraege.size),
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = DeepForest
-                                )
+                                Text(text = stringResource(R.string.show_all_entries, alleEintraege.size))
                             }
                         }
 
@@ -323,15 +311,10 @@ fun HauptScreen(
                             Icon(
                                 imageVector = Icons.Default.SwapVert,
                                 contentDescription = null,
-                                modifier = Modifier.size(20.dp),
-                                tint = DeepForest
+                                modifier = Modifier.size(20.dp)
                             )
                             Spacer(Modifier.width(8.dp))
-                            Text(
-                                text = stringResource(R.string.settings_import_export),
-                                style = MaterialTheme.typography.labelLarge,
-                                color = DeepForest
-                            )
+                            Text(text = stringResource(R.string.settings_import_export))
                         }
                     }
                 }
@@ -373,15 +356,10 @@ fun HauptScreen(
                             Icon(
                                 imageVector = Icons.Default.RestartAlt,
                                 contentDescription = null,
-                                modifier = Modifier.size(20.dp),
-                                tint = DeepForest
+                                modifier = Modifier.size(20.dp)
                             )
                             Spacer(Modifier.width(8.dp))
-                            Text(
-                                text = stringResource(R.string.restart_tutorial),
-                                style = MaterialTheme.typography.labelLarge,
-                                color = DeepForest
-                            )
+                            Text(text = stringResource(R.string.restart_tutorial))
                         }
                     }
                 }

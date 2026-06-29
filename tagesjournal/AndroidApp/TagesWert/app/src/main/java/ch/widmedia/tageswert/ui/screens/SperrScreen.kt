@@ -207,16 +207,10 @@ fun SperrScreen(
                     .fillMaxWidth(0.75f)
                     .height(52.dp),
                 contentColor = Color.White,
-                borderColor = DeepForest,
+                borderColor = Color.White.copy(alpha = 0.8f),
                 enabled = (authStatus != AuthStatus.SCANNING) && (authStatus != AuthStatus.SUCCESS)
             ) {
-                Text(
-                    text = stringResource(R.string.auth_title),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.White,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 16.sp
-                )
+                Text(text = stringResource(R.string.auth_title))
             }
         }
 

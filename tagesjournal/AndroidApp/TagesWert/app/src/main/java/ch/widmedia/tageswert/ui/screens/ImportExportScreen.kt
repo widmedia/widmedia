@@ -377,15 +377,10 @@ fun ImportExportScreen(
                                     Icon(
                                         imageVector = Icons.Filled.Upload,
                                         contentDescription = null,
-                                        modifier = Modifier.size(20.dp),
-                                        tint = DeepForest
+                                        modifier = Modifier.size(20.dp)
                                     )
                                     Spacer(Modifier.width(8.dp))
-                                    Text(
-                                        text = stringResource(R.string.export_confirm),
-                                        style = MaterialTheme.typography.titleMedium,
-                                        color = DeepForest
-                                    )
+                                    Text(text = stringResource(R.string.export_confirm))
                                 }
                             }
                         }
@@ -431,12 +426,9 @@ fun ImportExportScreen(
                                 onClick = { dateiPickerLauncher.launch("*/*") },
                                 modifier = Modifier.fillMaxWidth().height(48.dp)
                             ) {
-                                Icon(Icons.Filled.FolderOpen, null, Modifier.size(18.dp), tint = DeepForest)
+                                Icon(Icons.Filled.FolderOpen, null, Modifier.size(18.dp))
                                 Spacer(Modifier.width(8.dp))
-                                Text(
-                                    text = importDateiName.ifBlank { stringResource(R.string.import_file_select) },
-                                    color = DeepForest
-                                )
+                                Text(text = importDateiName.ifBlank { stringResource(R.string.import_file_select) })
                             }
 
                             PasswortFeld(
@@ -485,15 +477,10 @@ fun ImportExportScreen(
                                     Icon(
                                         imageVector = Icons.Filled.Download,
                                         contentDescription = null,
-                                        modifier = Modifier.size(20.dp),
-                                        tint = DeepForest
+                                        modifier = Modifier.size(20.dp)
                                     )
                                     Spacer(Modifier.width(8.dp))
-                                    Text(
-                                        text = stringResource(R.string.import_confirm),
-                                        style = MaterialTheme.typography.titleMedium,
-                                        color = DeepForest
-                                    )
+                                    Text(text = stringResource(R.string.import_confirm))
                                 }
                             }
                         }
@@ -546,11 +533,11 @@ fun ImportExportScreen(
                             }
                         }
                     ) {
-                        Text(stringResource(R.string.import_summary_confirm), color = DeepForest)
+                        Text(stringResource(R.string.import_summary_confirm))
                     }
                 },
                 dismissButton = {
-                    TextButton(onClick = { zeigeImportBestaetigung = false }) {
+                    AppButton(onClick = { zeigeImportBestaetigung = false }) {
                         Text(stringResource(R.string.cancel))
                     }
                 },

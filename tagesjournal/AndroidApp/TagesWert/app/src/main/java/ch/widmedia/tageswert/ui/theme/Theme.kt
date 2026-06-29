@@ -3,14 +3,18 @@ package ch.widmedia.tageswert.ui.theme
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -222,7 +226,13 @@ object AppCardDefaults {
 
 /**
  * Custom Button design for the App.
- * Outlined, elegant, with dark green border by default.
+ * Standardizes:
+ * - Font: Raleway (via labelLarge)
+ * - Size: 14sp
+ * - Colors: DeepForest text/icon/border, White(12%) background
+ * - Shape: 16dp Rounded
+ * - Border: 1dp solid
+ * - Padding: 16dp horizontal, 10dp vertical
  */
 @Composable
 fun AppButton(
@@ -234,21 +244,31 @@ fun AppButton(
     borderColor: Color = DeepForest,
     content: @Composable RowScope.() -> Unit
 ) {
+    val disabledAlpha = 0.38f
+    val finalContentColor = if (enabled) contentColor else contentColor.copy(alpha = disabledAlpha)
+    
     OutlinedButton(
         onClick = onClick,
         modifier = modifier,
         enabled = enabled,
         shape = AppCardDefaults.smallShape,
         colors = ButtonDefaults.outlinedButtonColors(
-            containerColor = containerColor,
-            contentColor = if (enabled) contentColor else contentColor.copy(alpha = 0.4f),
+            containerColor = if (enabled) containerColor else Color.White.copy(alpha = 0.05f),
+            contentColor = finalContentColor,
             disabledContainerColor = Color.White.copy(alpha = 0.05f),
-            disabledContentColor = contentColor.copy(alpha = 0.4f)
+            disabledContentColor = contentColor.copy(alpha = disabledAlpha)
         ),
         border = BorderStroke(
-            0.8.dp,
-            if (enabled) borderColor else borderColor.copy(alpha = 0.3f)
+            1.0.dp,
+            if (enabled) borderColor else borderColor.copy(alpha = disabledAlpha)
         ),
-        content = content
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp),
+        content = {
+            CompositionLocalProvider(LocalContentColor provides finalContentColor) {
+                ProvideTextStyle(value = MaterialTheme.typography.labelLarge) {
+                    content()
+                }
+            }
+        }
     )
 }
