@@ -494,7 +494,10 @@ fun ImportExportScreen(
             TutorialOverlay(
                 text = stringResource(R.string.tutorial_settings_data),
                 onNext = { viewModel.advanceTutorial(context, {}, onZurueck) },
-                onSkip = { viewModel.skipTutorial(context) },
+                onSkip = { 
+                    viewModel.skipTutorial(context)
+                    onZurueck()
+                },
                 step = uiState.tutorialStep,
                 targetRect = uiState.targetRect
             )

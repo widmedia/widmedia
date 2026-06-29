@@ -339,7 +339,10 @@ fun EintragScreen(
                 TutorialOverlay(
                     text = stringResource(R.string.tutorial_rating),
                     onNext = { viewModel.advanceTutorial(context, {}, onZurueck) },
-                    onSkip = { viewModel.skipTutorial(context) },
+                    onSkip = { 
+                        viewModel.skipTutorial(context)
+                        onZurueck()
+                    },
                     step = uiState.tutorialStep,
                     targetRect = uiState.targetRect
                 )
@@ -348,7 +351,10 @@ fun EintragScreen(
                 TutorialOverlay(
                     text = stringResource(R.string.tutorial_notes),
                     onNext = { viewModel.advanceTutorial(context, {}, onZurueck) },
-                    onSkip = { viewModel.skipTutorial(context) },
+                    onSkip = { 
+                        viewModel.skipTutorial(context)
+                        onZurueck()
+                    },
                     step = uiState.tutorialStep,
                     targetRect = uiState.targetRect
                 )
@@ -357,7 +363,10 @@ fun EintragScreen(
                 TutorialOverlay(
                     text = stringResource(R.string.tutorial_save),
                     onNext = { viewModel.advanceTutorial(context, {}, onZurueck) },
-                    onSkip = { viewModel.skipTutorial(context) },
+                    onSkip = { 
+                        viewModel.skipTutorial(context)
+                        onZurueck()
+                    },
                     step = uiState.tutorialStep,
                     targetRect = uiState.targetRect
                 )
