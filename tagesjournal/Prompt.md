@@ -2,16 +2,16 @@
 
 ## Refinement
 This list is updated as soon as the stuff works, only the next few points (TODOs) are listed 
+1. enable previews for the UI screens   
 1. (maybe) use another color for the button outline. Something dark-blueish.  
 1. (maybe) apply the material 3 expressive design to the app
-1. (maybe) enable previews for the UI screens
 1. fix all the build warnings.  
 1. try out some different UIs / colors. TODO: maybe with another tool (figma)
 1. have the lock symbol more prominent (TODO: decide how)
 
 
 ## Webpage
-1. Manually: change the texts. 
+1. 
 
 
 ## App store
