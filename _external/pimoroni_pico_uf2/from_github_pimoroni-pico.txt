@@ -1,0 +1,4 @@
+https://github.com/pimoroni/pimoroni-pico-rp2350/releases
+
+unofficial from here: https://github.com/pimoroni/pimoroni-pico-rp2350/actions/runs/28734299987/artifacts/8089868345
+
