@@ -202,8 +202,7 @@ object AppCardDefaults {
     
     val cornerRadius = 16.dp
     val largeCornerRadius = 24.dp
-    val smallCornerRadius = 12.dp
-    
+
     val shape = RoundedCornerShape(cornerRadius)
     val largeShape = RoundedCornerShape(largeCornerRadius)
     val smallShape = RoundedCornerShape(16.dp)

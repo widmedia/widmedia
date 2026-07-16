@@ -8,11 +8,8 @@ class EintragRepository(private val dao: TagEintragDao) {
 
     fun alleEintraege(): Flow<List<TagEintrag>> = dao.alleEintraege()
 
-    suspend fun eintraegFuerDatum(datum: String): TagEintrag? =
-        dao.eintraegFuerDatum(datum)
-
-    suspend fun datumMitEintrag(vonDatum: String, bisDatum: String): List<String> =
-        dao.datumMitEintrag(vonDatum, bisDatum)
+    suspend fun eintraegeFuerDatum(datum: String): TagEintrag? =
+        dao.eintraegeFuerDatum(datum)
 
     suspend fun bewertungenFuerZeitraum(vonDatum: String, bisDatum: String) =
         dao.bewertungenFuerZeitraum(vonDatum, bisDatum)

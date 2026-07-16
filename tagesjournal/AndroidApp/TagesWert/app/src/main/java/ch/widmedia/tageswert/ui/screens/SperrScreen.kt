@@ -26,8 +26,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -48,12 +46,12 @@ import androidx.compose.ui.unit.sp
 import ch.widmedia.tageswert.R
 import ch.widmedia.tageswert.ui.theme.AppButton
 import ch.widmedia.tageswert.ui.theme.AppCardDefaults
-import ch.widmedia.tageswert.ui.theme.DeepForest
 import ch.widmedia.tageswert.ui.theme.ErrorRed
 import ch.widmedia.tageswert.ui.theme.GoldAmber
 import ch.widmedia.tageswert.ui.theme.MossLight
 import ch.widmedia.tageswert.ui.theme.SageGreen
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 enum class AuthStatus { WAITING, SCANNING, SUCCESS, FAILED, ERROR }
 
@@ -84,7 +82,7 @@ fun SperrScreen(
 
     LaunchedEffect(authStatus) {
         if (authStatus == AuthStatus.SUCCESS) {
-            delay(400)
+            delay(duration = 400.milliseconds)
             onAuthentifiziert()
         }
     }

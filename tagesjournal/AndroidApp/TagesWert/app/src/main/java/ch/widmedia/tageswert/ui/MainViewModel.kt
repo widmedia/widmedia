@@ -28,6 +28,7 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
+import kotlin.time.Duration.Companion.milliseconds
 
 enum class TutorialStep {
     NONE,
@@ -213,7 +214,7 @@ class MainViewModel(private val repository: EintragRepository) : ViewModel() {
     private fun deleteTutorialEntry() {
         viewModelScope.launch {
             val today = DateUtil.toIso(LocalDate.now())
-            repository.eintraegFuerDatum(today)?.let {
+            repository.eintraegeFuerDatum(today)?.let {
                 repository.loeschen(it)
                 ladeMonatBewertungen(LocalDate.now())
             }
@@ -238,7 +239,7 @@ class MainViewModel(private val repository: EintragRepository) : ViewModel() {
         _shouldLock.value = false
         inactivityJob?.cancel()
         inactivityJob = viewModelScope.launch {
-            delay(10 * 60 * 1000) // 10 minutes
+            delay((10 * 60 * 1000).milliseconds) // 10 minutes
             autosave()
             _shouldLock.value = true
         }
@@ -252,7 +253,7 @@ class MainViewModel(private val repository: EintragRepository) : ViewModel() {
 
     fun startEditing(datum: String) {
         viewModelScope.launch {
-            editingEintrag = repository.eintraegFuerDatum(datum) ?: TagEintrag(datum = datum, bewertung = 5)
+            editingEintrag = repository.eintraegeFuerDatum(datum) ?: TagEintrag(datum = datum, bewertung = 5)
         }
     }
 
@@ -279,9 +280,6 @@ class MainViewModel(private val repository: EintragRepository) : ViewModel() {
             _uiState.value = _uiState.value.copy(monatBewertungen = map)
         }
     }
-
-    suspend fun eintragFuerDatum(datum: String): TagEintrag? =
-        repository.eintraegFuerDatum(datum)
 
     fun speichern(eintrag: TagEintrag, onDone: () -> Unit) {
         viewModelScope.launch {

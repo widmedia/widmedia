@@ -21,7 +21,7 @@ interface TagEintragDao {
     fun alleEintraege(): Flow<List<TagEintrag>>
 
     @Query("SELECT * FROM eintraege WHERE datum = :datum LIMIT 1")
-    suspend fun eintraegFuerDatum(datum: String): TagEintrag?
+    suspend fun eintraegeFuerDatum(datum: String): TagEintrag?
 
     @Query("SELECT datum FROM eintraege WHERE datum >= :vonDatum AND datum <= :bisDatum")
     suspend fun datumMitEintrag(vonDatum: String, bisDatum: String): List<String>

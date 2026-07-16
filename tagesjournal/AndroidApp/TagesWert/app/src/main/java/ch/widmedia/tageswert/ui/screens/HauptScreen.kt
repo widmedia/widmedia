@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,8 +25,6 @@ import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.RestartAlt
 import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,7 +36,6 @@ import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -73,6 +69,7 @@ import ch.widmedia.tageswert.ui.theme.SageGreen
 import ch.widmedia.tageswert.ui.theme.SlateGray
 import ch.widmedia.tageswert.ui.theme.ratingColor
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -102,7 +99,7 @@ fun HauptScreen(
     }
 
     LaunchedEffect(uiState.isIntroShown) {
-        if (!uiState.isIntroShown && uiState.tutorialStep == TutorialStep.NONE) {
+        if (!uiState.isIntroShown && (uiState.tutorialStep == TutorialStep.NONE)) {
             viewModel.startTutorial()
         }
     }
@@ -116,16 +113,18 @@ fun HauptScreen(
     }
 
     // Show snackbar for success/error messages
-    LaunchedEffect(uiState.successResId) {
-        uiState.successResId?.let { resId ->
-            snackbarHostState.showSnackbar(context.getString(resId))
+    val successMessage = uiState.successResId?.let { stringResource(it) }
+    LaunchedEffect(successMessage) {
+        successMessage?.let { msg ->
+            snackbarHostState.showSnackbar(msg)
             viewModel.clearMessages()
         }
     }
 
-    LaunchedEffect(uiState.errorResId) {
-        uiState.errorResId?.let { resId ->
-            snackbarHostState.showSnackbar(context.getString(resId))
+    val errorMessage = uiState.errorResId?.let { stringResource(it) }
+    LaunchedEffect(errorMessage) {
+        errorMessage?.let { msg ->
+            snackbarHostState.showSnackbar(msg)
             viewModel.clearMessages()
         }
     }
@@ -145,27 +144,27 @@ fun HauptScreen(
                         Text(
                             text = data.visuals.message,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White
+                            color = Color.White,
                         )
                     }
                 }
             },
-            containerColor = Color.Transparent
+            containerColor = Color.Transparent,
         ) { paddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(bottom = paddingValues.calculateBottomPadding())
-                    .verticalScroll(scrollState)
+                    .verticalScroll(scrollState),
             ) {
                 // Upper Part: Header and Calendar
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
                 ) {
                     Column {
                         AppHeader(
-                            onLock = onLock
+                            onLock = onLock,
                         )
                         Spacer(Modifier.height(8.dp))
                         MonatsKalender(
@@ -176,18 +175,18 @@ fun HauptScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .onGloballyPositioned { coords ->
-                                    if (uiState.tutorialStep == TutorialStep.WELCOME || 
-                                        uiState.tutorialStep == TutorialStep.COLOR_EXPLANATION) {
+                                    if ((uiState.tutorialStep == TutorialStep.WELCOME) || 
+                                        (uiState.tutorialStep == TutorialStep.COLOR_EXPLANATION)) {
                                         viewModel.setTargetRect(coords.boundsInWindow())
                                     }
-                                }
+                                },
                         )
                         
                         Spacer(Modifier.height(16.dp))
                         
                         StatistikSektion(
                             statistiken = monatsStatistiken,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
                         )
                     }
                 }
@@ -372,7 +371,7 @@ fun HauptScreen(
             TutorialStep.WELCOME -> {
                 TutorialOverlay(
                     text = stringResource(R.string.tutorial_past_dates),
-                    onNext = { viewModel.advanceTutorial(context, onEintragKlick, {}) },
+                    onNext = { viewModel.advanceTutorial(context, onEintragKlick) {} },
                     onSkip = { viewModel.skipTutorial(context) },
                     step = uiState.tutorialStep,
                     targetRect = uiState.targetRect
@@ -381,7 +380,7 @@ fun HauptScreen(
             TutorialStep.COLOR_EXPLANATION -> {
                 TutorialOverlay(
                     text = stringResource(R.string.tutorial_color_change),
-                    onNext = { viewModel.advanceTutorial(context, { _ -> onEinstellungen() }, {}) },
+                    onNext = { viewModel.advanceTutorial(context, { _ -> onEinstellungen() }) {} },
                     onSkip = { viewModel.skipTutorial(context) },
                     step = uiState.tutorialStep,
                     targetRect = uiState.targetRect
@@ -390,7 +389,7 @@ fun HauptScreen(
             TutorialStep.RESTART_INFO -> {
                 TutorialOverlay(
                     text = stringResource(R.string.tutorial_settings_restart),
-                    onNext = { viewModel.advanceTutorial(context, {}, {}) },
+                    onNext = { viewModel.advanceTutorial(context, {}) {} },
                     onSkip = { viewModel.skipTutorial(context) },
                     step = uiState.tutorialStep,
                     targetRect = uiState.targetRect,
@@ -404,11 +403,11 @@ fun HauptScreen(
 
 @Composable
 fun AppHeader(onLock: () -> Unit) {
-    var isLocking by remember { mutableStateOf(false) }
+    var isLocking by remember { mutableStateOf(value = false) }
 
     LaunchedEffect(isLocking) {
         if (isLocking) {
-            delay(400) // Brief delay to show the lock animation
+            delay(400.milliseconds) // Brief delay to show the lock animation
             onLock()
         }
     }
@@ -525,7 +524,7 @@ fun StatistikSektion(statistiken: List<MonatsStatistik>, modifier: Modifier = Mo
 }
 
 @Composable
-fun LeererZustand(onDarkBackground: Boolean = true, modifier: Modifier = Modifier) {
+fun LeererZustand(modifier: Modifier = Modifier, onDarkBackground: Boolean = true) {
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,

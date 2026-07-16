@@ -17,14 +17,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,7 +50,6 @@ import ch.widmedia.tageswert.ui.TutorialStep
 import ch.widmedia.tageswert.ui.theme.AppButton
 import ch.widmedia.tageswert.ui.theme.AppCardDefaults
 import ch.widmedia.tageswert.ui.theme.DeepForest
-import ch.widmedia.tageswert.ui.theme.SageGreen
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -65,10 +61,10 @@ fun TutorialOverlay(
     text: String,
     onNext: () -> Unit,
     onSkip: () -> Unit,
+    modifier: Modifier = Modifier,
     step: TutorialStep = TutorialStep.NONE,
     targetRect: Rect? = null,
-    isLastStep: Boolean = false,
-    modifier: Modifier = Modifier
+    isLastStep: Boolean = false
 ) {
     val density = LocalDensity.current
     var cardRect by remember { mutableStateOf<Rect?>(null) }
@@ -135,7 +131,14 @@ fun TutorialOverlay(
         } else {
             // No target: Center the card
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                TutorialCard(text, onNext, onSkip, step, isLastStep, modifier)
+                TutorialCard(
+                    text = text,
+                    onNext = onNext,
+                    onSkip = onSkip,
+                    step = step,
+                    isLastStep = isLastStep,
+                    modifier = modifier
+                )
             }
         }
     }
@@ -160,15 +163,14 @@ private fun DrawScope.drawCurvedArrow(
     
     // Perpendicular vector for the curve bulge
     val px = -uy
-    val py = ux
-    
+
     // Bulge based on distance, but limited
     val bulge = (distance * 0.25f).coerceAtMost(60.dp.toPx())
     
     // Control point for quadratic curve
     val control = Offset(
         x = start.x + dx * 0.5f + px * bulge,
-        y = start.y + dy * 0.5f + py * bulge
+        y = start.y + dy * 0.5f + ux * bulge
     )
 
     val path = Path().apply {
@@ -214,9 +216,9 @@ private fun TutorialCard(
     text: String,
     onNext: () -> Unit,
     onSkip: () -> Unit,
+    modifier: Modifier = Modifier,
     step: TutorialStep = TutorialStep.NONE,
-    isLastStep: Boolean = false,
-    modifier: Modifier = Modifier
+    isLastStep: Boolean = false
 ) {
     Card(
         modifier = modifier
