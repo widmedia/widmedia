@@ -41,15 +41,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.widmedia.tageswert.R
+import ch.widmedia.tageswert.ui.theme.AppBackground
 import ch.widmedia.tageswert.ui.theme.AppButton
 import ch.widmedia.tageswert.ui.theme.AppCardDefaults
 import ch.widmedia.tageswert.ui.theme.ErrorRed
 import ch.widmedia.tageswert.ui.theme.GoldAmber
 import ch.widmedia.tageswert.ui.theme.MossLight
 import ch.widmedia.tageswert.ui.theme.SageGreen
+import ch.widmedia.tageswert.ui.theme.TagesWertTheme
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -214,6 +217,21 @@ fun SperrScreen(
 
         // Bottom spacing (10%)
         Spacer(modifier = Modifier.align(Alignment.BottomCenter).height(80.dp))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SperrScreenPreview() {
+    TagesWertTheme {
+        AppBackground {
+            SperrScreen(
+                onAuthentifiziert = {},
+                onTriggerAuth = {},
+                authStatus = AuthStatus.WAITING,
+                fehlermeldung = null
+            )
+        }
     }
 }
 

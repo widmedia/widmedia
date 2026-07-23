@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
@@ -23,12 +24,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.widmedia.tageswert.R
 import ch.widmedia.tageswert.ui.theme.AppCardDefaults
 import ch.widmedia.tageswert.ui.theme.DeepForest
 import ch.widmedia.tageswert.ui.theme.SlateGray
+import ch.widmedia.tageswert.ui.theme.TagesWertTheme
 import ch.widmedia.tageswert.ui.theme.ratingColor
 import kotlin.math.roundToInt
 
@@ -110,6 +113,19 @@ fun BewertungsSlider(
                     fontSize = 10.sp
                 )
             }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BewertungsSliderPreview() {
+    TagesWertTheme {
+        Box(modifier = Modifier.padding(16.dp)) {
+            BewertungsSlider(
+                bewertung = 7,
+                onBewertungChange = {}
+            )
         }
     }
 }

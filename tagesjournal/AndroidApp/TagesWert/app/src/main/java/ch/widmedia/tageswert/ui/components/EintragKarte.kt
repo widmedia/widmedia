@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.widmedia.tageswert.data.model.TagEintrag
@@ -30,6 +31,7 @@ import ch.widmedia.tageswert.ui.theme.AppCardDefaults
 import ch.widmedia.tageswert.ui.theme.DeepForest
 import ch.widmedia.tageswert.ui.theme.DividerColor
 import ch.widmedia.tageswert.ui.theme.SlateGray
+import ch.widmedia.tageswert.ui.theme.TagesWertTheme
 import ch.widmedia.tageswert.ui.theme.ratingColor
 import ch.widmedia.tageswert.utils.DateUtil
 
@@ -115,5 +117,21 @@ fun EintragKarte(
                 modifier = Modifier.size(18.dp)
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun EintragKartePreview() {
+    TagesWertTheme {
+        EintragKarte(
+            eintrag = TagEintrag(
+                id = 1,
+                datum = "2024-03-20",
+                bewertung = 8,
+                notizen = "Ein schöner Frühlingstag mit viel Sonnenschein."
+            ),
+            onClick = {}
+        )
     }
 }

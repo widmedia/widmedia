@@ -52,14 +52,18 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.widmedia.tageswert.R
+import ch.widmedia.tageswert.data.model.TagEintrag
 import ch.widmedia.tageswert.ui.MainViewModel
 import ch.widmedia.tageswert.ui.MonatsStatistik
 import ch.widmedia.tageswert.ui.TutorialStep
+import ch.widmedia.tageswert.ui.UiState
 import ch.widmedia.tageswert.ui.components.MonatsKalender
 import ch.widmedia.tageswert.ui.components.TutorialOverlay
+import ch.widmedia.tageswert.ui.theme.AppBackground
 import ch.widmedia.tageswert.ui.theme.AppButton
 import ch.widmedia.tageswert.ui.theme.AppCardDefaults
 import ch.widmedia.tageswert.ui.theme.DeepForest
@@ -67,6 +71,7 @@ import ch.widmedia.tageswert.ui.theme.DividerColor
 import ch.widmedia.tageswert.ui.theme.GoldAmber
 import ch.widmedia.tageswert.ui.theme.SageGreen
 import ch.widmedia.tageswert.ui.theme.SlateGray
+import ch.widmedia.tageswert.ui.theme.TagesWertTheme
 import ch.widmedia.tageswert.ui.theme.ratingColor
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
@@ -85,6 +90,50 @@ fun HauptScreen(
     val alleEintraege by viewModel.alleEintraege.collectAsState()
     val monatsStatistiken by viewModel.monatsStatistiken.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.loadLastExportTime(context)
+    }
+
+    HauptScreenContent(
+        alleEintraege = alleEintraege,
+        monatsStatistiken = monatsStatistiken,
+        uiState = uiState,
+        onEintragKlick = onEintragKlick,
+        onAlleEintraege = onAlleEintraege,
+        onEinstellungen = onEinstellungen,
+        onLock = onLock,
+        onLadeMonatBewertungen = { viewModel.ladeMonatBewertungen(it) },
+        onClearMessages = { viewModel.clearMessages() },
+        onStartTutorial = { viewModel.startTutorial() },
+        onRestartTutorial = { ctx -> viewModel.restartTutorial(ctx) },
+        onAdvanceTutorial = { ctx, nav, back -> viewModel.advanceTutorial(ctx, nav, back) },
+        onSkipTutorial = { ctx -> viewModel.skipTutorial(ctx) },
+        onSetTargetRect = { rect -> viewModel.setTargetRect(rect) },
+        modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HauptScreenContent(
+    alleEintraege: List<TagEintrag>,
+    monatsStatistiken: List<MonatsStatistik>,
+    uiState: UiState,
+    onEintragKlick: (String) -> Unit,
+    onAlleEintraege: () -> Unit,
+    onEinstellungen: () -> Unit,
+    onLock: () -> Unit,
+    onLadeMonatBewertungen: (LocalDate) -> Unit,
+    onClearMessages: () -> Unit,
+    onStartTutorial: () -> Unit,
+    onRestartTutorial: (android.content.Context) -> Unit,
+    onAdvanceTutorial: (android.content.Context, (String) -> Unit, () -> Unit) -> Unit,
+    onSkipTutorial: (android.content.Context) -> Unit,
+    onSetTargetRect: (androidx.compose.ui.geometry.Rect?) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val scrollState = rememberScrollState()
@@ -100,16 +149,12 @@ fun HauptScreen(
 
     LaunchedEffect(uiState.isIntroShown) {
         if (!uiState.isIntroShown && (uiState.tutorialStep == TutorialStep.NONE)) {
-            viewModel.startTutorial()
+            onStartTutorial()
         }
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.loadLastExportTime(context)
-    }
-
     LaunchedEffect(aktuellerMonat) {
-        viewModel.ladeMonatBewertungen(aktuellerMonat)
+        onLadeMonatBewertungen(aktuellerMonat)
     }
 
     // Show snackbar for success/error messages
@@ -117,7 +162,7 @@ fun HauptScreen(
     LaunchedEffect(successMessage) {
         successMessage?.let { msg ->
             snackbarHostState.showSnackbar(msg)
-            viewModel.clearMessages()
+            onClearMessages()
         }
     }
 
@@ -125,7 +170,7 @@ fun HauptScreen(
     LaunchedEffect(errorMessage) {
         errorMessage?.let { msg ->
             snackbarHostState.showSnackbar(msg)
-            viewModel.clearMessages()
+            onClearMessages()
         }
     }
 
@@ -133,7 +178,6 @@ fun HauptScreen(
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             snackbarHost = {
-                // ... (no changes here)
                 SnackbarHost(snackbarHostState) { data ->
                     Snackbar(
                         containerColor = SageGreen,
@@ -177,7 +221,7 @@ fun HauptScreen(
                                 .onGloballyPositioned { coords ->
                                     if ((uiState.tutorialStep == TutorialStep.WELCOME) || 
                                         (uiState.tutorialStep == TutorialStep.COLOR_EXPLANATION)) {
-                                        viewModel.setTargetRect(coords.boundsInWindow())
+                                        onSetTargetRect(coords.boundsInWindow())
                                     }
                                 },
                         )
@@ -342,13 +386,13 @@ fun HauptScreen(
                         )
                         Spacer(Modifier.height(16.dp))
                         AppButton(
-                            onClick = { viewModel.restartTutorial(context) },
+                            onClick = { onRestartTutorial(context) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(48.dp)
                                 .onGloballyPositioned { coords ->
                                     if (uiState.tutorialStep == TutorialStep.RESTART_INFO) {
-                                        viewModel.setTargetRect(coords.boundsInWindow())
+                                        onSetTargetRect(coords.boundsInWindow())
                                     }
                                 }
                         ) {
@@ -371,8 +415,8 @@ fun HauptScreen(
             TutorialStep.WELCOME -> {
                 TutorialOverlay(
                     text = stringResource(R.string.tutorial_past_dates),
-                    onNext = { viewModel.advanceTutorial(context, onEintragKlick) {} },
-                    onSkip = { viewModel.skipTutorial(context) },
+                    onNext = { onAdvanceTutorial(context, onEintragKlick) {} },
+                    onSkip = { onSkipTutorial(context) },
                     step = uiState.tutorialStep,
                     targetRect = uiState.targetRect
                 )
@@ -380,8 +424,8 @@ fun HauptScreen(
             TutorialStep.COLOR_EXPLANATION -> {
                 TutorialOverlay(
                     text = stringResource(R.string.tutorial_color_change),
-                    onNext = { viewModel.advanceTutorial(context, { _ -> onEinstellungen() }) {} },
-                    onSkip = { viewModel.skipTutorial(context) },
+                    onNext = { onAdvanceTutorial(context, { _ -> onEinstellungen() }) {} },
+                    onSkip = { onSkipTutorial(context) },
                     step = uiState.tutorialStep,
                     targetRect = uiState.targetRect
                 )
@@ -389,14 +433,39 @@ fun HauptScreen(
             TutorialStep.RESTART_INFO -> {
                 TutorialOverlay(
                     text = stringResource(R.string.tutorial_settings_restart),
-                    onNext = { viewModel.advanceTutorial(context, {}) {} },
-                    onSkip = { viewModel.skipTutorial(context) },
+                    onNext = { onAdvanceTutorial(context, {}) {} },
+                    onSkip = { onSkipTutorial(context) },
                     step = uiState.tutorialStep,
                     targetRect = uiState.targetRect,
                     isLastStep = true
                 )
             }
             else -> {}
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HauptScreenPreview() {
+    TagesWertTheme {
+        AppBackground {
+            HauptScreenContent(
+                alleEintraege = listOf(TagEintrag(datum = "2024-03-20", bewertung = 8)),
+                monatsStatistiken = listOf(MonatsStatistik("Mär", 7.5, 10)),
+                uiState = UiState(),
+                onEintragKlick = {},
+                onAlleEintraege = {},
+                onEinstellungen = {},
+                onLock = {},
+                onLadeMonatBewertungen = {},
+                onClearMessages = {},
+                onStartTutorial = {},
+                onRestartTutorial = {},
+                onAdvanceTutorial = { _, _, _ -> },
+                onSkipTutorial = { _ -> },
+                onSetTargetRect = {}
+            )
         }
     }
 }

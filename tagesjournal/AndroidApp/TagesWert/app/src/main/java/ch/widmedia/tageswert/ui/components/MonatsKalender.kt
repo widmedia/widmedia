@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.widmedia.tageswert.ui.theme.AppCardDefaults
@@ -37,6 +38,7 @@ import ch.widmedia.tageswert.ui.theme.DeepForest
 import ch.widmedia.tageswert.ui.theme.DividerColor
 import ch.widmedia.tageswert.ui.theme.SageGreen
 import ch.widmedia.tageswert.ui.theme.SlateGray
+import ch.widmedia.tageswert.ui.theme.TagesWertTheme
 import ch.widmedia.tageswert.ui.theme.ratingColor
 import ch.widmedia.tageswert.utils.DateUtil
 import java.time.LocalDate
@@ -193,5 +195,23 @@ fun MonatsTagZelle(
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MonatsKalenderPreview() {
+    TagesWertTheme {
+        MonatsKalender(
+            aktuellerMonat = LocalDate.of(2024, 3, 1),
+            monatBewertungen = mapOf(
+                "2024-03-01" to 5,
+                "2024-03-02" to 7,
+                "2024-03-10" to 9,
+                "2024-03-20" to 3
+            ),
+            onMonatWechsel = {},
+            onDatumKlick = {}
+        )
     }
 }

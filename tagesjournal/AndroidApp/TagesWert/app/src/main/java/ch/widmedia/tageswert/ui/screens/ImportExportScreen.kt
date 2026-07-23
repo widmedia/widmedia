@@ -70,14 +70,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.widmedia.tageswert.MainActivity
 import ch.widmedia.tageswert.R
+import ch.widmedia.tageswert.data.model.TagEintrag
 import ch.widmedia.tageswert.security.SecurityManager
 import ch.widmedia.tageswert.ui.ImportSummary
 import ch.widmedia.tageswert.ui.MainViewModel
 import ch.widmedia.tageswert.ui.TutorialStep
+import ch.widmedia.tageswert.ui.UiState
 import ch.widmedia.tageswert.ui.components.TutorialOverlay
+import ch.widmedia.tageswert.ui.theme.AppBackground
 import ch.widmedia.tageswert.ui.theme.AppButton
 import ch.widmedia.tageswert.ui.theme.AppCardDefaults
 import ch.widmedia.tageswert.ui.theme.DeepForest
@@ -85,6 +89,7 @@ import ch.widmedia.tageswert.ui.theme.DividerColor
 import ch.widmedia.tageswert.ui.theme.SageGreen
 import ch.widmedia.tageswert.ui.theme.SlateGray
 import ch.widmedia.tageswert.ui.theme.Surface
+import ch.widmedia.tageswert.ui.theme.TagesWertTheme
 import ch.widmedia.tageswert.ui.theme.Terracotta
 import ch.widmedia.tageswert.utils.DateUtil
 import kotlinx.coroutines.launch
@@ -102,6 +107,40 @@ fun ImportExportScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     val activity = context as? MainActivity
+
+    ImportExportScreenContent(
+        uiState = uiState,
+        initialExportPassword = SecurityManager.getExportPassword(context) ?: "",
+        onZurueck = onZurueck,
+        onLastExportUpdate = { viewModel.updateLastExportTime(context) },
+        onGetEncryptedExportData = { pass, onRes -> viewModel.getEncryptedExportData(context, pass, onRes) },
+        onPrepareImport = { uri, pass, onSucc, onErr -> viewModel.prepareImport(context, uri, pass, onSucc, onErr) },
+        onExecuteImport = { entries, onSucc -> viewModel.executeImport(entries, onSucc) },
+        onAdvanceTutorial = { ctx, nav, back -> viewModel.advanceTutorial(ctx, nav, back) },
+        onSkipTutorial = { ctx -> viewModel.skipTutorial(ctx) },
+        onSetTargetRect = { rect -> viewModel.setTargetRect(rect) },
+        launchFilePicker = { name, onRes -> activity?.launchFilePicker(name, onRes) },
+        modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ImportExportScreenContent(
+    uiState: UiState,
+    initialExportPassword: String,
+    onZurueck: () -> Unit,
+    onLastExportUpdate: () -> Unit,
+    onGetEncryptedExportData: (String, (ByteArray?) -> Unit) -> Unit,
+    onPrepareImport: (Uri, String, (ImportSummary) -> Unit, (String) -> Unit) -> Unit,
+    onExecuteImport: (List<TagEintrag>, () -> Unit) -> Unit,
+    onAdvanceTutorial: (android.content.Context, (String) -> Unit, () -> Unit) -> Unit,
+    onSkipTutorial: (android.content.Context) -> Unit,
+    onSetTargetRect: (androidx.compose.ui.geometry.Rect?) -> Unit,
+    launchFilePicker: (String, (Uri?) -> Unit) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val scrollState = rememberScrollState()
@@ -119,7 +158,7 @@ fun ImportExportScreen(
     // Manual snackbar handling removed - using persistent card instead
     var successMessageToShow by remember { mutableStateOf<String?>(null) }
 
-    var exportPasswort by remember { mutableStateOf(SecurityManager.getExportPassword(context) ?: "") }
+    var exportPasswort by remember { mutableStateOf(initialExportPassword) }
     var exportPasswortSichtbar by remember { mutableStateOf(value = false) }
     var exportLaeuft by remember { mutableStateOf(value = false) }
 
@@ -150,13 +189,13 @@ fun ImportExportScreen(
     val onExportResult: (Uri?) -> Unit = { uri ->
         uri?.let { targetUri ->
             exportLaeuft = true
-            viewModel.getEncryptedExportData(context, exportPasswort) { data ->
+            onGetEncryptedExportData(exportPasswort) { data ->
                 if (data != null) {
                     try {
                         context.contentResolver.openOutputStream(targetUri)?.use { output ->
                             output.write(data)
                         }
-                        viewModel.updateLastExportTime(context)
+                        onLastExportUpdate()
                         successMessageToShow = exportSuccessText
                     } catch (_: Exception) {
                         scope.launch {
@@ -313,7 +352,7 @@ fun ImportExportScreen(
                         iconFarbe = SageGreen,
                         modifier = Modifier.onGloballyPositioned { coords ->
                             if (uiState.tutorialStep == TutorialStep.SETTINGS_DATA) {
-                                viewModel.setTargetRect(coords.boundsInWindow())
+                                onSetTargetRect(coords.boundsInWindow())
                             }
                         }
                     ) {
@@ -355,7 +394,7 @@ fun ImportExportScreen(
                                 onClick = {
                                     if (exportPasswort.isBlank()) return@AppButton
                                     val fileName = "tageswert_export_${System.currentTimeMillis()}.gtb"
-                                    activity?.launchFilePicker(fileName, onExportResult)
+                                    launchFilePicker(fileName, onExportResult)
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -440,16 +479,15 @@ fun ImportExportScreen(
                                     val uri = importUri ?: return@AppButton
                                     if (importPasswort.isBlank()) return@AppButton
                                     importLaeuft = true
-                                    viewModel.prepareImport(
-                                        context = context,
-                                        uri = uri,
-                                        password = importPasswort,
-                                        onSuccess = { summary ->
+                                    onPrepareImport(
+                                        uri,
+                                        importPasswort,
+                                        { summary ->
                                             importLaeuft = false
                                             importSummary = summary
                                             zeigeImportBestaetigung = true
                                         },
-                                        onError = { error ->
+                                        { error ->
                                             importLaeuft = false
                                             scope.launch {
                                                 snackbarHostState.showSnackbar(error)
@@ -488,9 +526,9 @@ fun ImportExportScreen(
         if (uiState.tutorialStep == TutorialStep.SETTINGS_DATA) {
             TutorialOverlay(
                 text = stringResource(R.string.tutorial_settings_data),
-                onNext = { viewModel.advanceTutorial(context, {}, onZurueck) },
+                onNext = { onAdvanceTutorial(context, {}, onZurueck) },
                 onSkip = { 
-                    viewModel.skipTutorial(context)
+                    onSkipTutorial(context)
                     onZurueck()
                 },
                 step = uiState.tutorialStep,
@@ -521,7 +559,7 @@ fun ImportExportScreen(
                         onClick = {
                             zeigeImportBestaetigung = false
                             importLaeuft = true
-                            viewModel.executeImport(summary.neueEintraege) {
+                            onExecuteImport(summary.neueEintraege) {
                                 importLaeuft = false
                                 importUri = null
                                 importDateiName = ""
@@ -541,6 +579,28 @@ fun ImportExportScreen(
                 },
                 shape = AppCardDefaults.shape,
                 containerColor = Surface
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ImportExportScreenPreview() {
+    TagesWertTheme {
+        AppBackground {
+            ImportExportScreenContent(
+                uiState = UiState(),
+                initialExportPassword = "password123",
+                onZurueck = {},
+                onLastExportUpdate = {},
+                onGetEncryptedExportData = { _, _ -> },
+                onPrepareImport = { _, _, _, _ -> },
+                onExecuteImport = { _, _ -> },
+                onAdvanceTutorial = { _, _, _ -> },
+                onSkipTutorial = { _ -> },
+                onSetTargetRect = { _ -> },
+                launchFilePicker = { _, _ -> }
             )
         }
     }

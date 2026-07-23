@@ -54,12 +54,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.widmedia.tageswert.R
+import ch.widmedia.tageswert.data.model.TagEintrag
 import ch.widmedia.tageswert.ui.MainViewModel
 import ch.widmedia.tageswert.ui.TutorialStep
+import ch.widmedia.tageswert.ui.UiState
 import ch.widmedia.tageswert.ui.components.BewertungsSlider
 import ch.widmedia.tageswert.ui.components.TutorialOverlay
+import ch.widmedia.tageswert.ui.theme.AppBackground
 import ch.widmedia.tageswert.ui.theme.AppButton
 import ch.widmedia.tageswert.ui.theme.AppCardDefaults
 import ch.widmedia.tageswert.ui.theme.DeepForest
@@ -68,6 +72,7 @@ import ch.widmedia.tageswert.ui.theme.ErrorRed
 import ch.widmedia.tageswert.ui.theme.SageGreen
 import ch.widmedia.tageswert.ui.theme.SlateGray
 import ch.widmedia.tageswert.ui.theme.Surface
+import ch.widmedia.tageswert.ui.theme.TagesWertTheme
 import ch.widmedia.tageswert.utils.DateUtil
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,9 +84,7 @@ fun EintragScreen(
     modifier: Modifier = Modifier,
 ) {
     val eintrag = viewModel.editingEintrag
-    var showDeleteDialog by remember { mutableStateOf(value = false) }
     val uiState by viewModel.uiState.collectAsState()
-    val context = androidx.compose.ui.platform.LocalContext.current
 
     // Load existing entry for this date
     LaunchedEffect(datum) {
@@ -102,6 +105,39 @@ fun EintragScreen(
         }
         return
     }
+
+    EintragScreenContent(
+        datum = datum,
+        eintrag = eintrag,
+        uiState = uiState,
+        onUpdateEditing = { bewertung, notizen -> viewModel.updateEditing(bewertung, notizen) },
+        onSpeichern = { onDone -> viewModel.speichern(eintrag) { onDone() } },
+        onLoeschen = { onDone -> viewModel.loeschen(eintrag) { onDone() } },
+        onAdvanceTutorial = { ctx, nav, back -> viewModel.advanceTutorial(ctx, nav, back) },
+        onSkipTutorial = { ctx -> viewModel.skipTutorial(ctx) },
+        onSetTargetRect = { rect -> viewModel.setTargetRect(rect) },
+        onZurueck = onZurueck,
+        modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EintragScreenContent(
+    datum: String,
+    eintrag: TagEintrag,
+    uiState: UiState,
+    onUpdateEditing: (Int?, String?) -> Unit,
+    onSpeichern: (() -> Unit) -> Unit,
+    onLoeschen: (() -> Unit) -> Unit,
+    onAdvanceTutorial: (android.content.Context, (String) -> Unit, () -> Unit) -> Unit,
+    onSkipTutorial: (android.content.Context) -> Unit,
+    onSetTargetRect: (androidx.compose.ui.geometry.Rect?) -> Unit,
+    onZurueck: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var showDeleteDialog by remember { mutableStateOf(value = false) }
+    val context = androidx.compose.ui.platform.LocalContext.current
 
     val isNew = eintrag.id == 0L
 
@@ -126,7 +162,7 @@ fun EintragScreen(
                 AppButton(
                     onClick = {
                         showDeleteDialog = false
-                        viewModel.loeschen(eintrag) { onZurueck() }
+                        onLoeschen { onZurueck() }
                     },
                     containerColor = ErrorRed.copy(alpha = 0.1f),
                     contentColor = ErrorRed,
@@ -232,10 +268,10 @@ fun EintragScreen(
                         ) {
                             BewertungsSlider(
                                 bewertung = eintrag.bewertung,
-                                onBewertungChange = { viewModel.updateEditing(bewertung = it) },
+                                onBewertungChange = { onUpdateEditing(it, null) },
                                 modifier = Modifier.onGloballyPositioned { coords ->
                                     if (uiState.tutorialStep == TutorialStep.RATING) {
-                                        viewModel.setTargetRect(coords.boundsInWindow())
+                                        onSetTargetRect(coords.boundsInWindow())
                                     }
                                 }
                             )
@@ -260,13 +296,13 @@ fun EintragScreen(
                             )
                             OutlinedTextField(
                                 value = eintrag.notizen,
-                                onValueChange = { viewModel.updateEditing(notizen = it) },
+                                onValueChange = { onUpdateEditing(null, it) },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .heightIn(min = 120.dp)
                                     .onGloballyPositioned { coords ->
                                         if (uiState.tutorialStep == TutorialStep.NOTES) {
-                                            viewModel.setTargetRect(coords.boundsInWindow())
+                                            onSetTargetRect(coords.boundsInWindow())
                                         }
                                     },
                                 placeholder = {
@@ -305,14 +341,14 @@ fun EintragScreen(
                         ) {
                             AppButton(
                                 onClick = {
-                                    viewModel.speichern(eintrag) { onZurueck() }
+                                    onSpeichern { onZurueck() }
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(56.dp)
                                     .onGloballyPositioned { coords ->
                                         if (uiState.tutorialStep == TutorialStep.SAVE) {
-                                            viewModel.setTargetRect(coords.boundsInWindow())
+                                            onSetTargetRect(coords.boundsInWindow())
                                         }
                                     }
                             ) {
@@ -335,9 +371,9 @@ fun EintragScreen(
             TutorialStep.RATING -> {
                 TutorialOverlay(
                     text = stringResource(R.string.tutorial_rating),
-                    onNext = { viewModel.advanceTutorial(context, {}, onZurueck) },
+                    onNext = { onAdvanceTutorial(context, {}, onZurueck) },
                     onSkip = { 
-                        viewModel.skipTutorial(context)
+                        onSkipTutorial(context)
                         onZurueck()
                     },
                     step = uiState.tutorialStep,
@@ -347,9 +383,9 @@ fun EintragScreen(
             TutorialStep.NOTES -> {
                 TutorialOverlay(
                     text = stringResource(R.string.tutorial_notes),
-                    onNext = { viewModel.advanceTutorial(context, {}, onZurueck) },
+                    onNext = { onAdvanceTutorial(context, {}, onZurueck) },
                     onSkip = { 
-                        viewModel.skipTutorial(context)
+                        onSkipTutorial(context)
                         onZurueck()
                     },
                     step = uiState.tutorialStep,
@@ -359,9 +395,9 @@ fun EintragScreen(
             TutorialStep.SAVE -> {
                 TutorialOverlay(
                     text = stringResource(R.string.tutorial_save),
-                    onNext = { viewModel.advanceTutorial(context, {}, onZurueck) },
+                    onNext = { onAdvanceTutorial(context, {}, onZurueck) },
                     onSkip = { 
-                        viewModel.skipTutorial(context)
+                        onSkipTutorial(context)
                         onZurueck()
                     },
                     step = uiState.tutorialStep,
@@ -369,6 +405,27 @@ fun EintragScreen(
                 )
             }
             else -> {}
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun EintragScreenPreview() {
+    TagesWertTheme {
+        AppBackground {
+            EintragScreenContent(
+                datum = "2024-03-20",
+                eintrag = TagEintrag(id = 1, datum = "2024-03-20", bewertung = 7, notizen = "Guter Tag."),
+                uiState = UiState(),
+                onUpdateEditing = { _, _ -> },
+                onSpeichern = { it() },
+                onLoeschen = { it() },
+                onAdvanceTutorial = { _, _, _ -> },
+                onSkipTutorial = { _ -> },
+                onSetTargetRect = { _ -> },
+                onZurueck = {}
+            )
         }
     }
 }

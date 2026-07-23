@@ -41,14 +41,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.widmedia.tageswert.R
+import ch.widmedia.tageswert.data.model.TagEintrag
 import ch.widmedia.tageswert.ui.MainViewModel
 import ch.widmedia.tageswert.ui.components.EintragKarte
+import ch.widmedia.tageswert.ui.theme.AppBackground
 import ch.widmedia.tageswert.ui.theme.AppButton
 import ch.widmedia.tageswert.ui.theme.AppCardDefaults
 import ch.widmedia.tageswert.ui.theme.DeepForest
 import ch.widmedia.tageswert.ui.theme.SlateGray
+import ch.widmedia.tageswert.ui.theme.TagesWertTheme
 import ch.widmedia.tageswert.ui.theme.Terracotta
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,6 +64,25 @@ fun AlleEintraegeScreen(
     modifier: Modifier = Modifier
 ) {
     val alleEintraege by viewModel.alleEintraege.collectAsState()
+    
+    AlleEintraegeScreenContent(
+        alleEintraege = alleEintraege,
+        onEintragKlick = onEintragKlick,
+        onZurueck = onZurueck,
+        onAlleLoeschen = { onDone -> viewModel.alleLoeschen(onDone) },
+        modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AlleEintraegeScreenContent(
+    alleEintraege: List<TagEintrag>,
+    onEintragKlick: (String) -> Unit,
+    onZurueck: () -> Unit,
+    onAlleLoeschen: (() -> Unit) -> Unit,
+    modifier: Modifier = Modifier
+) {
     var zeigeLoeschBestaetigung by remember { mutableStateOf(false) }
     val listState = rememberLazyListState()
 
@@ -130,7 +153,7 @@ fun AlleEintraegeScreen(
                         item {
                             DeleteAllWarningCard(
                                 onConfirm = {
-                                    viewModel.alleLoeschen {
+                                    onAlleLoeschen {
                                         zeigeLoeschBestaetigung = false
                                     }
                                 },
@@ -217,6 +240,25 @@ fun DeleteAllWarningCard(
                     Text(text = stringResource(R.string.delete_all))
                 }
             }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AlleEintraegeScreenPreview() {
+    TagesWertTheme {
+        AppBackground {
+            AlleEintraegeScreenContent(
+                alleEintraege = listOf(
+                    TagEintrag(1, "2024-03-20", 8, "Ein schöner Tag."),
+                    TagEintrag(2, "2024-03-19", 5, "Normaler Tag."),
+                    TagEintrag(3, "2024-03-18", 10, "Fantastisch!")
+                ),
+                onEintragKlick = {},
+                onZurueck = {},
+                onAlleLoeschen = {}
+            )
         }
     }
 }
