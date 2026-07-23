@@ -70,6 +70,7 @@ data class UiState(
     val lastExportTime: Long = 0L,
     val firstStartTime: Long = 0L,
     val isIntroShown: Boolean = false,
+    val isPreferencesLoaded: Boolean = false,
     val tutorialStep: TutorialStep = TutorialStep.NONE,
     val targetRect: Rect? = null,
 )
@@ -137,7 +138,8 @@ class MainViewModel(private val repository: EintragRepository) : ViewModel() {
         _uiState.value = _uiState.value.copy(
             lastExportTime = time,
             firstStartTime = firstStart,
-            isIntroShown = introShown
+            isIntroShown = introShown,
+            isPreferencesLoaded = true
         )
     }
 

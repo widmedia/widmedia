@@ -147,8 +147,8 @@ fun HauptScreenContent(
         }
     }
 
-    LaunchedEffect(uiState.isIntroShown) {
-        if (!uiState.isIntroShown && (uiState.tutorialStep == TutorialStep.NONE)) {
+    LaunchedEffect(uiState.isPreferencesLoaded, uiState.isIntroShown) {
+        if (uiState.isPreferencesLoaded && !uiState.isIntroShown && (uiState.tutorialStep == TutorialStep.NONE)) {
             onStartTutorial()
         }
     }
@@ -453,7 +453,7 @@ fun HauptScreenPreview() {
             HauptScreenContent(
                 alleEintraege = listOf(TagEintrag(datum = "2024-03-20", bewertung = 8)),
                 monatsStatistiken = listOf(MonatsStatistik("Mär", 7.5, 10)),
-                uiState = UiState(),
+                uiState = UiState(isPreferencesLoaded = true, isIntroShown = true),
                 onEintragKlick = {},
                 onAlleEintraege = {},
                 onEinstellungen = {},
