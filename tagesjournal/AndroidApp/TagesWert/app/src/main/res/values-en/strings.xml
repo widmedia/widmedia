@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TagesWert</string>
+    <string name="app_subtitle">How was your day?</string>
+    <string name="feature_local">all local</string>
+    <string name="feature_encrypted">all encrypted</string>
+    <string name="feature_no_ads">no ads</string>
+
+    <!-- Auth -->
+    <string name="auth_title">Unlock</string>
+    <string name="auth_subtitle"> </string>
+    <string name="auth_prompt">Authentication required</string>
+    <string name="auth_cancel">Cancel</string>
+    <string name="auth_error">Authentication error</string>
+    <string name="auth_no_biometric">No fingerprint set up. This app only works with fingerprint. Please configure in settings.</string>
+    <string name="auth_waiting">Tap to unlock</string>
+    <string name="auth_welcome">Welcome back! ✓</string>
+    <string name="auth_retry">Not recognized. Try again.</string>
+    <string name="lock_title">Lock</string>
+
+    <!-- Main -->
+    <string name="no_entries">No entries yet</string>
+    <string name="no_entries_hint">Tap a date in the calendar</string>
+    <string name="entries_title">Entries</string>
+    <string name="statistics_title">Statistics</string>
+    <string name="show_all_entries">Show all %1$d entries</string>
+
+    <!-- Entry -->
+    <string name="new_entry">New entry</string>
+    <string name="edit_entry">Edit entry</string>
+    <string name="entry_text">Notes</string>
+    <string name="entry_text_hint">Journal…</string>
+    <string name="back">Back</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="delete_confirm_title">Delete entry?</string>
+    <string name="delete_confirm_message">This entry will be permanently deleted.</string>
+    <string name="entry_saved">Entry saved</string>
+    <string name="entry_deleted">Entry deleted</string>
+    <string name="entries_deleted">All entries deleted</string>
+    <string name="delete_all">Delete all</string>
+    <string name="delete_all_confirm_title">Delete all entries?</string>
+    <string name="delete_all_confirm_message">Are you sure? All your entries will be permanently deleted. This action cannot be undone.</string>
+    <string name="error_unknown">Unknown error</string>
+
+    <!-- Export / Import -->
+    <string name="export_description">Export all entries as an encrypted file</string>
+    <string name="export_password">Export password</string>
+    <string name="export_confirm">Export</string>
+    <string name="export_success">Export successfully saved</string>
+    <string name="export_error">Error exporting</string>
+    <string name="export_last_time">Last export: %1$s</string>
+    <string name="export_never">No export created yet</string>
+    <string name="export_reminder_title">Backup recommended</string>
+    <string name="export_reminder_text">Your last export was over 30 days ago. Your data is only stored locally and is biometrically encrypted. If your fingerprints change, the local data will become unusable. Please export a backup regularly.</string>
+
+    <string name="import_description">Import entries from an encrypted file</string>
+    <string name="import_password">Import password</string>
+    <string name="import_confirm">Import</string>
+    <string name="import_success">Import successful</string>
+    <string name="import_success_count">%1$d entries were successfully imported.</string>
+    <string name="import_file_select">Select file</string>
+    <string name="import_overwrite_warning">All existing entries will be overwritten.</string>
+    <string name="import_summary_dialog_title">Confirm import</string>
+    <string name="import_summary_text">Currently %1$d entries are included. These will be deleted and %2$d new entries (from %3$s to %4$s) will be imported.</string>
+    <string name="import_summary_confirm">Overwrite now</string>
+
+    <!-- Settings -->
+    <string name="settings_import_export">Import / Export</string>
+    <string name="data_management">Data management</string>
+    <string name="tab_export">Export</string>
+    <string name="tab_import">Import</string>
+
+    <!-- Password -->
+    <string name="password_show">Show password</string>
+    <string name="password_hide">Hide password</string>
+
+    <!-- Days of week (short) -->
+
+    <!-- FAB -->
+
+    <!-- Tutorial -->
+    <string name="intro_skip">Skip tutorial</string>
+    <string name="intro_next">Next</string>
+    <string name="restart_tutorial">Restart tutorial</string>
+    <string name="tutorial_welcome_title">Tutorial</string>
+    <string name="tutorial_past_dates">You can click on any dates in the past (plus today) to rate them. Let\'s try it with today!</string>
+    <string name="tutorial_rating">Move the slider to rate your day. The greener, the better!</string>
+    <string name="tutorial_notes">Here you can record your thoughts and experiences. We\'ve pre-written something for you.</string>
+    <string name="tutorial_save">Save your entry now.</string>
+    <string name="tutorial_color_change">See? The date in the calendar now has a color that corresponds to your rating. This way you can see at a glance how your month was!</string>
+    <string name="tutorial_settings_data">Under Import/Exports you can back up your data. Since everything is local and encrypted, you should create an export regularly to be able to restore your entries in case of a device change or problems.</string>
+    <string name="tutorial_settings_restart">The test entry just created has been deleted again. If you need help later, you can restart the tutorial here at any time. Enjoy TagesWert!</string>
+    <string name="tutorial_finish">Finish tutorial</string>
+</resources>
