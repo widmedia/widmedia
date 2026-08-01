@@ -2,10 +2,8 @@
 
 ## Refinement
 This list is updated as soon as the stuff works, only the next few points (TODOs) are listed 
-1. enable previews for the UI screens   
 1. (maybe) use another color for the button outline. Something dark-blueish. And add a light blue background to the button
 1. (maybe) apply the material 3 expressive design to the app
-1. fix all the build warnings.  
 1. add a view where one can flip through/skim through/browse the entries. Starting at the newest one. Should have the look of a diary with animations when browsing from one entry to the other.  
 1. try out some different UIs / colors. TODO: maybe with another tool (figma)
 
