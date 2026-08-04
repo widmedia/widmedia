@@ -73,6 +73,7 @@ data class UiState(
     val isPreferencesLoaded: Boolean = false,
     val tutorialStep: TutorialStep = TutorialStep.NONE,
     val targetRect: Rect? = null,
+    val aktuellerMonat: LocalDate = LocalDate.now().withDayOfMonth(1),
 )
 
 data class ImportSummary(
@@ -256,6 +257,8 @@ class MainViewModel(private val repository: EintragRepository) : ViewModel() {
     fun startEditing(datum: String) {
         viewModelScope.launch {
             editingEintrag = repository.eintraegeFuerDatum(datum) ?: TagEintrag(datum = datum, bewertung = 5)
+            // Sync current month with the entry being edited
+            ladeMonatBewertungen(LocalDate.parse(datum, DateUtil.ISO_FORMAT))
         }
     }
 
@@ -272,14 +275,18 @@ class MainViewModel(private val repository: EintragRepository) : ViewModel() {
 
     fun ladeMonatBewertungen(datum: LocalDate) {
         viewModelScope.launch {
-            val von = datum.withDayOfMonth(1)
-            val bis = datum.withDayOfMonth(datum.lengthOfMonth())
+            val firstOfMonth = datum.withDayOfMonth(1)
+            val von = firstOfMonth
+            val bis = firstOfMonth.withDayOfMonth(firstOfMonth.lengthOfMonth())
             val bewertungen = repository.bewertungenFuerZeitraum(
                 DateUtil.toIso(von),
                 DateUtil.toIso(bis)
             )
             val map = bewertungen.associate { it.datum to it.bewertung }
-            _uiState.value = _uiState.value.copy(monatBewertungen = map)
+            _uiState.value = _uiState.value.copy(
+                monatBewertungen = map,
+                aktuellerMonat = firstOfMonth
+            )
         }
     }
 

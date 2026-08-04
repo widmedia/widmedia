@@ -2,8 +2,6 @@
 
 ## Refinement
 This list is updated as soon as the stuff works, only the next few points (TODOs) are listed 
-1. question: in which languages is this app available?
-1. fix: after editing an entry, return to the date of this entry. Make sure the main view shows the month of the edited entry, not the current month.
 1. feature-gamification: when opening the app, show how many days I opened the app without missing a 48 hour (2 days) break. This shall be displayed at the bottom and automatically disappear again.
 1. feature-gamification: at the statistic block, show how many consecutive days have a rating (up until today)
 1. (maybe) use another color for the button outline. Something dark-blueish. And add a light blue background to the button

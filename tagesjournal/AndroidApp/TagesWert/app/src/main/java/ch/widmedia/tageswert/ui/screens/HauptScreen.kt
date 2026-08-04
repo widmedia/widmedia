@@ -138,8 +138,6 @@ fun HauptScreenContent(
     val context = LocalContext.current
     val scrollState = rememberScrollState()
     
-    var aktuellerMonat by remember { mutableStateOf(LocalDate.now().withDayOfMonth(1)) }
-
     // Scroll to tutorial items
     LaunchedEffect(uiState.tutorialStep) {
         if (uiState.tutorialStep == TutorialStep.RESTART_INFO) {
@@ -151,10 +149,6 @@ fun HauptScreenContent(
         if (uiState.isPreferencesLoaded && !uiState.isIntroShown && (uiState.tutorialStep == TutorialStep.NONE)) {
             onStartTutorial()
         }
-    }
-
-    LaunchedEffect(aktuellerMonat) {
-        onLadeMonatBewertungen(aktuellerMonat)
     }
 
     // Show snackbar for success/error messages
@@ -212,9 +206,9 @@ fun HauptScreenContent(
                         )
                         Spacer(Modifier.height(8.dp))
                         MonatsKalender(
-                            aktuellerMonat = aktuellerMonat,
+                            aktuellerMonat = uiState.aktuellerMonat,
                             monatBewertungen = uiState.monatBewertungen,
-                            onMonatWechsel = { aktuellerMonat = it },
+                            onMonatWechsel = { onLadeMonatBewertungen(it) },
                             onDatumKlick = onEintragKlick,
                             modifier = Modifier
                                 .fillMaxWidth()
