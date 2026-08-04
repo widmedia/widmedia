@@ -7,6 +7,10 @@ import android.util.Base64
 import androidx.core.content.edit
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import java.time.Duration
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKeyFactory
@@ -22,6 +26,8 @@ object SecurityManager {
     private const val PREF_LAST_EXPORT   = "last_export_time"
     private const val PREF_FIRST_START   = "first_start_time"
     private const val PREF_INTRO_SHOWN   = "intro_shown"
+    private const val PREF_LAST_OPEN_TIME = "last_open_time"
+    private const val PREF_STREAK_COUNT   = "streak_count"
 
     private const val AES_GCM           = "AES/GCM/NoPadding"
     private const val GCM_IV_LEN        = 12
@@ -79,6 +85,38 @@ object SecurityManager {
 
     fun setIntroShown(context: Context, shown: Boolean) {
         getSecurePrefs(context).edit { putBoolean(PREF_INTRO_SHOWN, shown) }
+    }
+
+    fun updateAndGetStreak(context: Context): Int {
+        val prefs = getSecurePrefs(context)
+        val now = System.currentTimeMillis()
+        val lastOpen = prefs.getLong(PREF_LAST_OPEN_TIME, 0L)
+        var streak = prefs.getInt(PREF_STREAK_COUNT, 0)
+
+        if (lastOpen == 0L) {
+            streak = 1
+        } else {
+            val lastInstant = Instant.ofEpochMilli(lastOpen)
+            val nowInstant = Instant.ofEpochMilli(now)
+            val lastDate = lastInstant.atZone(ZoneId.systemDefault()).toLocalDate()
+            val today = nowInstant.atZone(ZoneId.systemDefault()).toLocalDate()
+
+            val diffHours = Duration.between(lastInstant, nowInstant).toHours()
+
+            if (today.isAfter(lastDate)) {
+                if (diffHours < 48) {
+                    streak++
+                } else {
+                    streak = 1
+                }
+            }
+        }
+
+        prefs.edit {
+            putLong(PREF_LAST_OPEN_TIME, now)
+            putInt(PREF_STREAK_COUNT, streak)
+        }
+        return streak
     }
 
     // ── Export encryption (AES-256-GCM via PBKDF2) ───────────────────────────

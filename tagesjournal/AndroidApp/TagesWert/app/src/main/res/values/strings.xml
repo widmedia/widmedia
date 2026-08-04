@@ -24,6 +24,10 @@
     <string name="entries_title">Einträge</string>
     <string name="statistics_title">Statistik</string>
     <string name="show_all_entries">Alle %1$d Einträge anzeigen</string>
+    <plurals name="streak_message">
+        <item quantity="one">Aktuelle Serie (ohne 2-Tages-Unterbruch): %1$d Tag</item>
+        <item quantity="other">Aktuelle Serie (ohne 2-Tages-Unterbruch): %1$d Tage</item>
+    </plurals>
 
     <!-- Entry -->
     <string name="new_entry">Neuer Eintrag</string>

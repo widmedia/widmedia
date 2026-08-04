@@ -34,6 +34,7 @@ fun TagesWertNavigation(
 
     LaunchedEffect(Unit) {
         viewModel.loadLastExportTime(context)
+        viewModel.checkStreak(context)
     }
 
     NavHost(

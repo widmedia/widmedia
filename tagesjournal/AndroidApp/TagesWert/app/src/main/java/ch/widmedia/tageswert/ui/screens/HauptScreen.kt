@@ -1,6 +1,12 @@
 package ch.widmedia.tageswert.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,9 +38,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -50,6 +53,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -69,7 +73,6 @@ import ch.widmedia.tageswert.ui.theme.AppCardDefaults
 import ch.widmedia.tageswert.ui.theme.DeepForest
 import ch.widmedia.tageswert.ui.theme.DividerColor
 import ch.widmedia.tageswert.ui.theme.GoldAmber
-import ch.widmedia.tageswert.ui.theme.SageGreen
 import ch.widmedia.tageswert.ui.theme.SlateGray
 import ch.widmedia.tageswert.ui.theme.TagesWertTheme
 import ch.widmedia.tageswert.ui.theme.ratingColor
@@ -111,7 +114,9 @@ fun HauptScreen(
         onAdvanceTutorial = { ctx, nav, back -> viewModel.advanceTutorial(ctx, nav, back) },
         onSkipTutorial = { ctx -> viewModel.skipTutorial(ctx) },
         onSetTargetRect = { rect -> viewModel.setTargetRect(rect) },
-        modifier = modifier
+        onClearStreak = { viewModel.clearStreak() },
+        onMarkStreakProcessed = { viewModel.markStreakProcessed() },
+        modifier = modifier,
     )
 }
 
@@ -132,9 +137,10 @@ fun HauptScreenContent(
     onAdvanceTutorial: (android.content.Context, (String) -> Unit, () -> Unit) -> Unit,
     onSkipTutorial: (android.content.Context) -> Unit,
     onSetTargetRect: (androidx.compose.ui.geometry.Rect?) -> Unit,
+    onClearStreak: () -> Unit,
+    onMarkStreakProcessed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val scrollState = rememberScrollState()
     
@@ -151,42 +157,46 @@ fun HauptScreenContent(
         }
     }
 
-    // Show snackbar for success/error messages
-    val successMessage = uiState.successResId?.let { stringResource(it) }
-    LaunchedEffect(successMessage) {
-        successMessage?.let { msg ->
-            snackbarHostState.showSnackbar(msg)
+    // Message management (Success/Error/Streak)
+    var activeMessage by remember { mutableStateOf<String?>(null) }
+
+    val successMsg = uiState.successResId?.let { stringResource(it) }
+    LaunchedEffect(successMsg) {
+        successMsg?.let { msg ->
+            activeMessage = msg
+            delay(3000.milliseconds)
+            activeMessage = null
             onClearMessages()
         }
     }
 
-    val errorMessage = uiState.errorResId?.let { stringResource(it) }
-    LaunchedEffect(errorMessage) {
-        errorMessage?.let { msg ->
-            snackbarHostState.showSnackbar(msg)
+    val errorMsg = uiState.errorResId?.let { stringResource(it) }
+    LaunchedEffect(errorMsg) {
+        errorMsg?.let { msg ->
+            activeMessage = msg
+            delay(3000.milliseconds)
+            activeMessage = null
             onClearMessages()
+        }
+    }
+
+    // Auto-hide streak message with entrance delay
+    var showStreak by remember { mutableStateOf(value = false) }
+    LaunchedEffect(uiState.currentStreak) {
+        if (uiState.currentStreak != null && !uiState.isStreakProcessed) {
+            onMarkStreakProcessed()
+            delay(1000.milliseconds) // Wait for screen transition to finish
+            showStreak = true
+            delay(5000.milliseconds)
+            showStreak = false
+            delay(600.milliseconds) // Wait for exit animation
+            onClearStreak()
         }
     }
 
     Box(modifier = modifier.fillMaxSize()) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            snackbarHost = {
-                SnackbarHost(snackbarHostState) { data ->
-                    Snackbar(
-                        containerColor = SageGreen,
-                        contentColor = Color.White,
-                        shape = AppCardDefaults.smallShape,
-                        modifier = Modifier.padding(16.dp),
-                    ) {
-                        Text(
-                            text = data.visuals.message,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White,
-                        )
-                    }
-                }
-            },
             containerColor = Color.Transparent,
         ) { paddingValues ->
             Column(
@@ -436,6 +446,46 @@ fun HauptScreenContent(
             }
             else -> {}
         }
+
+        // Message Overlay (Streak or Success/Error)
+        val streakMsg = uiState.currentStreak?.let { pluralStringResource(R.plurals.streak_message, it, it) }
+        val displayMessage = activeMessage ?: if (showStreak) streakMsg else null
+
+        // Preserve message during exit animation
+        var lastMessage by remember { mutableStateOf<String?>(null) }
+        if (displayMessage != null) {
+            lastMessage = displayMessage
+        }
+
+        AnimatedVisibility(
+            visible = displayMessage != null,
+            enter = fadeIn(tween(400)) + slideInVertically(initialOffsetY = { it }, animationSpec = tween(600)),
+            exit = fadeOut(tween(400)) + slideOutVertically(targetOffsetY = { it }, animationSpec = tween(600)),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(start = 16.dp, end = 16.dp, bottom = 80.dp)
+        ) {
+            lastMessage?.let { msg ->
+                Card(
+                    shape = RoundedCornerShape(24.dp),
+                    colors = CardDefaults.cardColors(containerColor = DeepForest),
+                    elevation = CardDefaults.cardElevation(8.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = msg,
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -458,7 +508,9 @@ fun HauptScreenPreview() {
                 onRestartTutorial = {},
                 onAdvanceTutorial = { _, _, _ -> },
                 onSkipTutorial = { _ -> },
-                onSetTargetRect = {}
+                onSetTargetRect = {},
+                onClearStreak = {},
+                onMarkStreakProcessed = {}
             )
         }
     }

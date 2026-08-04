@@ -74,6 +74,8 @@ data class UiState(
     val tutorialStep: TutorialStep = TutorialStep.NONE,
     val targetRect: Rect? = null,
     val aktuellerMonat: LocalDate = LocalDate.now().withDayOfMonth(1),
+    val currentStreak: Int? = null,
+    val isStreakProcessed: Boolean = false,
 )
 
 data class ImportSummary(
@@ -142,6 +144,28 @@ class MainViewModel(private val repository: EintragRepository) : ViewModel() {
             isIntroShown = introShown,
             isPreferencesLoaded = true
         )
+    }
+
+    private var streakChecked = false
+
+    fun checkStreak(context: Context) {
+        if (streakChecked) return
+        streakChecked = true
+        viewModelScope.launch {
+            val streak = SecurityManager.updateAndGetStreak(context)
+            _uiState.value = _uiState.value.copy(
+                currentStreak = streak,
+                isStreakProcessed = false
+            )
+        }
+    }
+
+    fun markStreakProcessed() {
+        _uiState.value = _uiState.value.copy(isStreakProcessed = true)
+    }
+
+    fun clearStreak() {
+        _uiState.value = _uiState.value.copy(currentStreak = null)
     }
 
     fun setIntroShown(context: Context) {

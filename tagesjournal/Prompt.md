@@ -2,7 +2,6 @@
 
 ## Refinement
 This list is updated as soon as the stuff works, only the next few points (TODOs) are listed 
-1. feature-gamification: when opening the app, show how many days I opened the app without missing a 48 hour (2 days) break. This shall be displayed at the bottom and automatically disappear again.
 1. feature-gamification: at the statistic block, show how many consecutive days have a rating (up until today)
 1. (maybe) use another color for the button outline. Something dark-blueish. And add a light blue background to the button
 1. (maybe) apply the material 3 expressive design to the app
