@@ -8,7 +8,11 @@ This list is updated as soon as the stuff works, only the next few points (TODOs
 1. feature: add a view where one can flip through/skim through/browse the entries. Starting at the newest one. Should have the look of a diary with animations when browsing from one entry to the other.  
 1. try out some different UIs / colors. TODO: maybe with another tool (figma)
 
+## LinkedIn post
+Wollte mal ausprobieren, was man mit Gratis-AI tools heute so hinkriegt, wenn man von der darunterliegenden Materie keine Ahnung hat... und ich muss sagen, man kommt also extrem weit. Sogar so weit, dass man sich seine eigene Android-App einfach selber programmiert, wenn es nichts passendes im Store gibt. Und damit erstaunlicherweise so zufrieden ist, dass man das auch seinen Kollegen vorstellt. 
+Et voilà, da wären wir jetzt: https://play.google.com/store/apps/details?id=ch.widmedia.tageswert&hl=de
 
+(bin fürs Ausprobieren und Rückmeldungen immer dankbar. Und jupp, gibts nur für Android, man ist ja kein iPhone-Krösus)
 
 ## Webpage
 1. 
