@@ -2,11 +2,13 @@
 
 ## Refinement
 This list is updated as soon as the stuff works, only the next few points (TODOs) are listed 
-1. feature-gamification: at the statistic block, show how many consecutive days have a rating (up until today)
-1. (maybe) use another color for the button outline. Something dark-blueish. And add a light blue background to the button
-1. (maybe) apply the material 3 expressive design to the app
+1. feature-gamification: at the 'Eintrag gespeichert'-snackbar, show on a second line how many consecutive days have a rating (up until today).  
+1. question: does my app use jetpack compose? Is the UI entirely built with this framework?  
+1. (maybe) use another color for the button outline. Something dark-blueish. And add a light blue background to the button.  
+1. (maybe) apply the material 3 expressive design to the app.  
 1. feature: add a view where one can flip through/skim through/browse the entries. Starting at the newest one. Should have the look of a diary with animations when browsing from one entry to the other.  
-1. try out some different UIs / colors. TODO: maybe with another tool (figma)
+1. try out some different UIs / colors. TODO: maybe with another tool (figma).  
+
 
 ## LinkedIn post
 Wollte mal ausprobieren, was man mit Gratis-AI tools heute so hinkriegt, wenn man von der darunterliegenden Materie keine Ahnung hat... und ich muss sagen, man kommt also extrem weit. Sogar so weit, dass man sich seine eigene Android-App einfach selber programmiert, wenn es nichts passendes im Store gibt. Und damit erstaunlicherweise so zufrieden ist, dass man das auch seinen Kollegen vorstellt. 
