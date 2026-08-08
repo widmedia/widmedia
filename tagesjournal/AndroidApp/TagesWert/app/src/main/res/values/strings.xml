@@ -28,6 +28,10 @@
         <item quantity="one">Aktuelle Serie (ohne 2-Tages-Unterbruch): %1$d Tag</item>
         <item quantity="other">Aktuelle Serie (ohne 2-Tages-Unterbruch): %1$d Tage</item>
     </plurals>
+    <plurals name="streak_count">
+        <item quantity="one">%1$d Tag in Folge</item>
+        <item quantity="other">%1$d Tage in Folge</item>
+    </plurals>
 
     <!-- Entry -->
     <string name="new_entry">Neuer Eintrag</string>

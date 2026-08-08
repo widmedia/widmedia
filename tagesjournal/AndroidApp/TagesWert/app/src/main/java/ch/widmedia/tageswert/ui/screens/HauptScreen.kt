@@ -56,6 +56,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -160,7 +161,17 @@ fun HauptScreenContent(
     // Message management (Success/Error/Streak)
     var activeMessage by remember { mutableStateOf<String?>(null) }
 
-    val successMsg = uiState.successResId?.let { stringResource(it) }
+    val successMsg = if (uiState.successResId == R.string.entry_saved) {
+        val baseMsg = stringResource(R.string.entry_saved)
+        if (uiState.databaseStreak > 0) {
+            val streakMsg = pluralStringResource(R.plurals.streak_count, uiState.databaseStreak, uiState.databaseStreak)
+            "$baseMsg\n$streakMsg"
+        } else {
+            baseMsg
+        }
+    } else {
+        uiState.successResId?.let { stringResource(it) }
+    }
     LaunchedEffect(successMsg) {
         successMsg?.let { msg ->
             activeMessage = msg
@@ -480,7 +491,8 @@ fun HauptScreenContent(
                             text = msg,
                             color = Color.White,
                             style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center
                         )
                     }
                 }

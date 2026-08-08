@@ -76,6 +76,7 @@ data class UiState(
     val aktuellerMonat: LocalDate = LocalDate.now().withDayOfMonth(1),
     val currentStreak: Int? = null,
     val isStreakProcessed: Boolean = false,
+    val databaseStreak: Int = 0,
 )
 
 data class ImportSummary(
@@ -132,6 +133,37 @@ class MainViewModel(private val repository: EintragRepository) : ViewModel() {
         // Load current month by default
         ladeMonatBewertungen(LocalDate.now())
         resetInactivityTimer()
+
+        viewModelScope.launch {
+            alleEintraege.collect { eintraege ->
+                _uiState.value = _uiState.value.copy(databaseStreak = calculateDatabaseStreak(eintraege))
+            }
+        }
+    }
+
+    private fun calculateDatabaseStreak(eintraege: List<TagEintrag>): Int {
+        if (eintraege.isEmpty()) return 0
+
+        val today = LocalDate.now()
+        val entryDates = eintraege.mapNotNull {
+            try { LocalDate.parse(it.datum, DateUtil.ISO_FORMAT) } catch (e: Exception) { null }
+        }.toSet()
+
+        var streak = 0
+        var checkDate = today
+
+        // If today has no entry, start checking from yesterday. 
+        // This ensures the streak doesn't drop to 0 just because today's entry isn't saved yet.
+        if (!entryDates.contains(today)) {
+            checkDate = today.minusDays(1)
+        }
+
+        while (entryDates.contains(checkDate)) {
+            streak++
+            checkDate = checkDate.minusDays(1)
+        }
+
+        return streak
     }
 
     fun loadLastExportTime(context: Context) {
