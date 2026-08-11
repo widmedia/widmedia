@@ -14,6 +14,14 @@ Et voilà, da wären wir jetzt: https://play.google.com/store/apps/details?id=ch
 
 (bin fürs Ausprobieren und Rückmeldungen immer dankbar. Und jupp, gibts nur für Android, man ist ja kein iPhone-Krösus)
 
+## Android Status
+Ssso, ein bisschen Werbung hier abr tja, gebts zu, ihr habt ja eh nichts besseres zu tun...
+
+Habe mal die AI angeworfen um meine eigene Android-App zu programmieren. Erstaunlicherweise funktioniert die sogar. Und ich wäre für beta-Tester und allgemeine Rückmeldung sehr dankbar...
+Et voilà: https://play.google.com/store/apps/details?id=ch.widmedia.tageswert&hl=de
+
+(und jupp, gibts nur für Android, man ist ja kein iPhone-Krösus)
+
 ## Webpage
 1. 
 
