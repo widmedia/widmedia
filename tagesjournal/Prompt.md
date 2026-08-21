@@ -2,7 +2,6 @@
 
 ## Refinement
 This list is updated as soon as the stuff works, only the next few points (TODOs) are listed   
-1. fix: in the @EintragScreen.kt view, when entering a long text in the text field I can't scroll upwards enough when the screen keyboard is visible. I thus don't see the 'speichern' button. Fix this bug.
 1. question: which license is currently applied to this app? Which license use the dependencies I include? And where/how should I place the license if I want to change it? Which license model makes sense?
 1. (maybe) use another color for the button outline. Something dark-blueish. And add a light blue background to the button.  
 1. (maybe) apply the material 3 expressive design to the app.  
