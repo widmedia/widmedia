@@ -49,6 +49,12 @@ function doReduce($dbConn, int $userid):bool {
 
 $userid = getUserid(); // this will get a valid return because if not, the initialize above will already fail (=redirect)
 
+$timeoutCounter = 0;
+do {
+  $didReduce = doReduce(dbConn:$dbConn, userid:$userid);
+  $timeoutCounter++;
+} while ($didReduce and ($timeoutCounter < 500));
+
 $resultCnt = $dbConn->query(query:"SELECT COUNT(*) as `total` FROM `pico_log` WHERE `userid` = \"$userid\" LIMIT 1;"); // guaranteed to return one row
 $resultFreshest = $dbConn->query(query:"SELECT `zeit` FROM `pico_log` WHERE `userid` = \"$userid\" ORDER BY `zeit` DESC LIMIT 1;"); // cannot combine those two
 
@@ -57,9 +63,6 @@ $rowFreshest = $resultFreshest->fetch_assoc(); // returns 0 or 1 row
 $totalCount = $rowCnt['total'];
 
 printBeginOfPage_v2(site:'status_loopCount.php');
-do {
-  $didReduce = doReduce(dbConn:$dbConn, userid:$userid); 
-} while ($didReduce);
 
 if ($totalCount > 0) {// this may be 0
   $zeitNewest = date_create($rowFreshest['zeit']);    
