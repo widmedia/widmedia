@@ -1,7 +1,8 @@
 # Prompt
 
 ## Refinement
-This list is updated as soon as the stuff works, only the next few points (TODOs) are listed   
+This list is updated as soon as the stuff works, only the next few points (TODOs) are listed
+1. expand the gamification items: store the longest streaks for logins and calendar entries. Show this in the 'Statistik'-Card (below the monthly statistic with a divider in between). Use horizontal bars showing the current streak and the longest streak.
 1. question: which license is currently applied to this app? Which license use the dependencies I include? And where/how should I place the license if I want to change it? Which license model makes sense?
 1. (maybe) use another color for the button outline. Something dark-blueish. And add a light blue background to the button.  
 1. (maybe) apply the material 3 expressive design to the app.  
