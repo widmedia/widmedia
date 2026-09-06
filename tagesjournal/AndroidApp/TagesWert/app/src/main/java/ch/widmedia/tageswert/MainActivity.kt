@@ -172,6 +172,7 @@ class MainActivity : FragmentActivity() {
                 SperrScreen(
                     onAuthentifiziert = { 
                         entsperrt = true
+                        viewModel.checkStreak(this@MainActivity)
                         viewModel.resetInactivityTimer()
                     },
                     onTriggerAuth = triggerAuth,

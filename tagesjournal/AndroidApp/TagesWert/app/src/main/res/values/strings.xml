@@ -23,6 +23,10 @@
     <string name="no_entries_hint">Tippe auf ein Datum im Kalender</string>
     <string name="entries_title">Einträge</string>
     <string name="statistics_title">Statistik</string>
+    <string name="statistics_login_streak">Login-Serie</string>
+    <string name="statistics_entry_streak">Eintrags-Serie</string>
+    <string name="statistics_streak_current">Aktuell</string>
+    <string name="statistics_streak_longest">Rekord</string>
     <string name="show_all_entries">Alle %1$d Einträge anzeigen</string>
     <plurals name="streak_message">
         <item quantity="one">Aktuelle Serie (ohne 2-Tages-Unterbruch): %1$d Tag</item>

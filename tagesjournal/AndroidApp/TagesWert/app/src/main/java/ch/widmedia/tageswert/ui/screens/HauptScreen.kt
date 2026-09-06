@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -163,8 +164,8 @@ fun HauptScreenContent(
 
     val successMsg = if (uiState.successResId == R.string.entry_saved) {
         val baseMsg = stringResource(R.string.entry_saved)
-        if (uiState.databaseStreak > 0) {
-            val streakMsg = pluralStringResource(R.plurals.streak_count, uiState.databaseStreak, uiState.databaseStreak)
+        if (uiState.currentEntryStreak > 0) {
+            val streakMsg = pluralStringResource(R.plurals.streak_count, uiState.currentEntryStreak, uiState.currentEntryStreak)
             "$baseMsg\n$streakMsg"
         } else {
             baseMsg
@@ -193,8 +194,8 @@ fun HauptScreenContent(
 
     // Auto-hide streak message with entrance delay
     var showStreak by remember { mutableStateOf(value = false) }
-    LaunchedEffect(uiState.currentStreak) {
-        if (uiState.currentStreak != null && !uiState.isStreakProcessed) {
+    LaunchedEffect(uiState.currentLoginStreak) {
+        if (uiState.currentLoginStreak > 0 && !uiState.isStreakProcessed) {
             onMarkStreakProcessed()
             delay(1000.milliseconds) // Wait for screen transition to finish
             showStreak = true
@@ -245,6 +246,10 @@ fun HauptScreenContent(
                         
                         StatistikSektion(
                             statistiken = monatsStatistiken,
+                            currentLoginStreak = uiState.currentLoginStreak,
+                            longestLoginStreak = uiState.longestLoginStreak,
+                            currentEntryStreak = uiState.currentEntryStreak,
+                            longestEntryStreak = uiState.longestEntryStreak,
                             modifier = Modifier.fillMaxWidth(),
                         )
                     }
@@ -459,7 +464,7 @@ fun HauptScreenContent(
         }
 
         // Message Overlay (Streak or Success/Error)
-        val streakMsg = uiState.currentStreak?.let { pluralStringResource(R.plurals.streak_message, it, it) }
+        val streakMsg = if (uiState.currentLoginStreak > 0) pluralStringResource(R.plurals.streak_message, uiState.currentLoginStreak, uiState.currentLoginStreak) else null
         val displayMessage = activeMessage ?: if (showStreak) streakMsg else null
 
         // Preserve message during exit animation
@@ -584,7 +589,14 @@ fun AppHeader(onLock: () -> Unit) {
 }
 
 @Composable
-fun StatistikSektion(statistiken: List<MonatsStatistik>, modifier: Modifier = Modifier) {
+fun StatistikSektion(
+    statistiken: List<MonatsStatistik>,
+    currentLoginStreak: Int,
+    longestLoginStreak: Int,
+    currentEntryStreak: Int,
+    longestEntryStreak: Int,
+    modifier: Modifier = Modifier
+) {
     Card(
         modifier = modifier
             .padding(horizontal = 16.dp),
@@ -646,6 +658,89 @@ fun StatistikSektion(statistiken: List<MonatsStatistik>, modifier: Modifier = Mo
                     }
                 }
             }
+
+            if (longestLoginStreak > 0 || longestEntryStreak > 0) {
+                Spacer(Modifier.height(16.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(DividerColor.copy(alpha = 0.3f))
+                )
+                Spacer(Modifier.height(16.dp))
+
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    if (longestLoginStreak > 0) {
+                        HorizontalStreakBar(
+                            label = stringResource(R.string.statistics_login_streak),
+                            current = currentLoginStreak,
+                            longest = longestLoginStreak,
+                            color = GoldAmber
+                        )
+                    }
+                    if (longestEntryStreak > 0) {
+                        HorizontalStreakBar(
+                            label = stringResource(R.string.statistics_entry_streak),
+                            current = currentEntryStreak,
+                            longest = longestEntryStreak,
+                            color = DeepForest
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun HorizontalStreakBar(
+    label: String,
+    current: Int,
+    longest: Int,
+    color: Color
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelMedium,
+                color = SlateGray,
+                fontWeight = FontWeight.Medium
+            )
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = "${stringResource(R.string.statistics_streak_current)}: $current",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = SlateGray
+                )
+                Text(
+                    text = "${stringResource(R.string.statistics_streak_longest)}: $longest",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = DeepForest,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+        Spacer(Modifier.height(4.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(8.dp)
+                .clip(CircleShape)
+                .background(color.copy(alpha = 0.1f))
+        ) {
+            val ratio = if (longest > 0) (current.toFloat() / longest.toFloat()).coerceIn(0f, 1f) else 0f
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(ratio)
+                    .fillMaxHeight()
+                    .clip(CircleShape)
+                    .background(color)
+            )
         }
     }
 }

@@ -23,6 +23,10 @@
     <string name="no_entries_hint">Tap a date in the calendar</string>
     <string name="entries_title">Entries</string>
     <string name="statistics_title">Statistics</string>
+    <string name="statistics_login_streak">Login streak</string>
+    <string name="statistics_entry_streak">Entry streak</string>
+    <string name="statistics_streak_current">Current</string>
+    <string name="statistics_streak_longest">Record</string>
     <string name="show_all_entries">Show all %1$d entries</string>
     <plurals name="streak_message">
         <item quantity="one">Current streak (without 2-day break): %1$d day</item>

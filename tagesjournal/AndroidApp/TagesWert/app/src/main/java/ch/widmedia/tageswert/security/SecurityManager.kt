@@ -28,6 +28,8 @@ object SecurityManager {
     private const val PREF_INTRO_SHOWN   = "intro_shown"
     private const val PREF_LAST_OPEN_TIME = "last_open_time"
     private const val PREF_STREAK_COUNT   = "streak_count"
+    private const val PREF_LONGEST_STREAK_COUNT = "longest_streak_count"
+    private const val PREF_LONGEST_ENTRY_STREAK_COUNT = "longest_entry_streak_count"
 
     private const val AES_GCM           = "AES/GCM/NoPadding"
     private const val GCM_IV_LEN        = 12
@@ -87,11 +89,12 @@ object SecurityManager {
         getSecurePrefs(context).edit { putBoolean(PREF_INTRO_SHOWN, shown) }
     }
 
-    fun updateAndGetStreak(context: Context): Int {
+    fun updateAndGetStreak(context: Context): Pair<Int, Int> {
         val prefs = getSecurePrefs(context)
         val now = System.currentTimeMillis()
         val lastOpen = prefs.getLong(PREF_LAST_OPEN_TIME, 0L)
         var streak = prefs.getInt(PREF_STREAK_COUNT, 0)
+        var longestStreak = prefs.getInt(PREF_LONGEST_STREAK_COUNT, 0)
 
         if (lastOpen == 0L) {
             streak = 1
@@ -112,11 +115,23 @@ object SecurityManager {
             }
         }
 
+        if (streak > longestStreak) {
+            longestStreak = streak
+        }
+
         prefs.edit {
             putLong(PREF_LAST_OPEN_TIME, now)
             putInt(PREF_STREAK_COUNT, streak)
+            putInt(PREF_LONGEST_STREAK_COUNT, longestStreak)
         }
-        return streak
+        return streak to longestStreak
+    }
+
+    fun getLongestEntryStreak(context: Context): Int =
+        getSecurePrefs(context).getInt(PREF_LONGEST_ENTRY_STREAK_COUNT, 0)
+
+    fun saveLongestEntryStreak(context: Context, streak: Int) {
+        getSecurePrefs(context).edit { putInt(PREF_LONGEST_ENTRY_STREAK_COUNT, streak) }
     }
 
     // ── Export encryption (AES-256-GCM via PBKDF2) ───────────────────────────

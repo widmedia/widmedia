@@ -74,9 +74,11 @@ data class UiState(
     val tutorialStep: TutorialStep = TutorialStep.NONE,
     val targetRect: Rect? = null,
     val aktuellerMonat: LocalDate = LocalDate.now().withDayOfMonth(1),
-    val currentStreak: Int? = null,
+    val currentLoginStreak: Int = 0,
+    val longestLoginStreak: Int = 0,
     val isStreakProcessed: Boolean = false,
-    val databaseStreak: Int = 0,
+    val currentEntryStreak: Int = 0,
+    val longestEntryStreak: Int = 0,
 )
 
 data class ImportSummary(
@@ -130,52 +132,84 @@ class MainViewModel(private val repository: EintragRepository) : ViewModel() {
         private set
 
     init {
-        // Load current month by default
         ladeMonatBewertungen(LocalDate.now())
         resetInactivityTimer()
+    }
 
+    fun initStreaks(context: Context) {
         viewModelScope.launch {
             alleEintraege.collect { eintraege ->
-                _uiState.value = _uiState.value.copy(databaseStreak = calculateDatabaseStreak(eintraege))
+                val streaks = calculateEntryStreaks(context, eintraege)
+                _uiState.value = _uiState.value.copy(
+                    currentEntryStreak = streaks.first,
+                    longestEntryStreak = streaks.second
+                )
             }
         }
     }
 
-    private fun calculateDatabaseStreak(eintraege: List<TagEintrag>): Int {
-        if (eintraege.isEmpty()) return 0
+    private fun calculateEntryStreaks(context: Context, eintraege: List<TagEintrag>): Pair<Int, Int> {
+        if (eintraege.isEmpty()) return 0 to SecurityManager.getLongestEntryStreak(context)
 
-        val today = LocalDate.now()
         val entryDates = eintraege.mapNotNull {
             try { LocalDate.parse(it.datum, DateUtil.ISO_FORMAT) } catch (e: Exception) { null }
         }.toSet()
 
-        var streak = 0
-        var checkDate = today
+        if (entryDates.isEmpty()) return 0 to SecurityManager.getLongestEntryStreak(context)
 
-        // If today has no entry, start checking from yesterday. 
-        // This ensures the streak doesn't drop to 0 just because today's entry isn't saved yet.
+        val today = LocalDate.now()
+        
+        // Calculate current streak
+        var currentStreak = 0
+        var checkDate = today
         if (!entryDates.contains(today)) {
             checkDate = today.minusDays(1)
         }
-
         while (entryDates.contains(checkDate)) {
-            streak++
+            currentStreak++
             checkDate = checkDate.minusDays(1)
         }
 
-        return streak
+        // Calculate longest streak ever (including history)
+        var maxStreak = 0
+        var tempStreak = 0
+        var lastDate: LocalDate? = null
+
+        // Sort ascending to find streaks in history
+        entryDates.sorted().forEach { date ->
+            if (lastDate == null || date == lastDate.plusDays(1)) {
+                tempStreak++
+            } else {
+                if (tempStreak > maxStreak) maxStreak = tempStreak
+                tempStreak = 1
+            }
+            lastDate = date
+        }
+        if (tempStreak > maxStreak) maxStreak = tempStreak
+
+        val savedLongest = SecurityManager.getLongestEntryStreak(context)
+        if (maxStreak > savedLongest) {
+            SecurityManager.saveLongestEntryStreak(context, maxStreak)
+        } else {
+            maxStreak = savedLongest
+        }
+
+        return currentStreak to maxStreak
     }
 
     fun loadLastExportTime(context: Context) {
         val time = SecurityManager.getLastExportTime(context)
         val firstStart = SecurityManager.getOrCreateFirstStartTime(context)
         val introShown = SecurityManager.isIntroShown(context)
+        val longestEntry = SecurityManager.getLongestEntryStreak(context)
         _uiState.value = _uiState.value.copy(
             lastExportTime = time,
             firstStartTime = firstStart,
             isIntroShown = introShown,
-            isPreferencesLoaded = true
+            isPreferencesLoaded = true,
+            longestEntryStreak = longestEntry
         )
+        initStreaks(context)
     }
 
     private var streakChecked = false
@@ -184,9 +218,10 @@ class MainViewModel(private val repository: EintragRepository) : ViewModel() {
         if (streakChecked) return
         streakChecked = true
         viewModelScope.launch {
-            val streak = SecurityManager.updateAndGetStreak(context)
+            val (current, longest) = SecurityManager.updateAndGetStreak(context)
             _uiState.value = _uiState.value.copy(
-                currentStreak = streak,
+                currentLoginStreak = current,
+                longestLoginStreak = longest,
                 isStreakProcessed = false
             )
         }
@@ -197,7 +232,7 @@ class MainViewModel(private val repository: EintragRepository) : ViewModel() {
     }
 
     fun clearStreak() {
-        _uiState.value = _uiState.value.copy(currentStreak = null)
+        _uiState.value = _uiState.value.copy(currentLoginStreak = 0)
     }
 
     fun setIntroShown(context: Context) {
