@@ -116,7 +116,6 @@ fun HauptScreen(
         onAdvanceTutorial = { ctx, nav, back -> viewModel.advanceTutorial(ctx, nav, back) },
         onSkipTutorial = { ctx -> viewModel.skipTutorial(ctx) },
         onSetTargetRect = { rect -> viewModel.setTargetRect(rect) },
-        onClearStreak = { viewModel.clearStreak() },
         onMarkStreakProcessed = { viewModel.markStreakProcessed() },
         modifier = modifier,
     )
@@ -139,7 +138,6 @@ fun HauptScreenContent(
     onAdvanceTutorial: (android.content.Context, (String) -> Unit, () -> Unit) -> Unit,
     onSkipTutorial: (android.content.Context) -> Unit,
     onSetTargetRect: (androidx.compose.ui.geometry.Rect?) -> Unit,
-    onClearStreak: () -> Unit,
     onMarkStreakProcessed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -194,15 +192,13 @@ fun HauptScreenContent(
 
     // Auto-hide streak message with entrance delay
     var showStreak by remember { mutableStateOf(value = false) }
-    LaunchedEffect(uiState.currentLoginStreak) {
+    LaunchedEffect(uiState.currentLoginStreak, uiState.isStreakProcessed) {
         if (uiState.currentLoginStreak > 0 && !uiState.isStreakProcessed) {
             onMarkStreakProcessed()
             delay(1000.milliseconds) // Wait for screen transition to finish
             showStreak = true
             delay(5000.milliseconds)
             showStreak = false
-            delay(600.milliseconds) // Wait for exit animation
-            onClearStreak()
         }
     }
 
@@ -526,7 +522,6 @@ fun HauptScreenPreview() {
                 onAdvanceTutorial = { _, _, _ -> },
                 onSkipTutorial = { _ -> },
                 onSetTargetRect = {},
-                onClearStreak = {},
                 onMarkStreakProcessed = {}
             )
         }

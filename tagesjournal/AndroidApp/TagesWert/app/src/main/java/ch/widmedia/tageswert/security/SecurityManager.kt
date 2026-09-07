@@ -93,7 +93,7 @@ object SecurityManager {
         val prefs = getSecurePrefs(context)
         val now = System.currentTimeMillis()
         val lastOpen = prefs.getLong(PREF_LAST_OPEN_TIME, 0L)
-        var streak = prefs.getInt(PREF_STREAK_COUNT, 0)
+        var streak = maxOf(1, prefs.getInt(PREF_STREAK_COUNT, 0))
         var longestStreak = prefs.getInt(PREF_LONGEST_STREAK_COUNT, 0)
 
         if (lastOpen == 0L) {

@@ -74,9 +74,9 @@ data class UiState(
     val tutorialStep: TutorialStep = TutorialStep.NONE,
     val targetRect: Rect? = null,
     val aktuellerMonat: LocalDate = LocalDate.now().withDayOfMonth(1),
-    val currentLoginStreak: Int = 0,
+    val currentLoginStreak: Int = 1,
     val longestLoginStreak: Int = 0,
-    val isStreakProcessed: Boolean = false,
+    val isStreakProcessed: Boolean = true,
     val currentEntryStreak: Int = 0,
     val longestEntryStreak: Int = 0,
 )
@@ -229,10 +229,6 @@ class MainViewModel(private val repository: EintragRepository) : ViewModel() {
 
     fun markStreakProcessed() {
         _uiState.value = _uiState.value.copy(isStreakProcessed = true)
-    }
-
-    fun clearStreak() {
-        _uiState.value = _uiState.value.copy(currentLoginStreak = 0)
     }
 
     fun setIntroShown(context: Context) {
