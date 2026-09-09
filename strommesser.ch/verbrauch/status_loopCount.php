@@ -53,7 +53,7 @@ $timeoutCounter = 0;
 do {
   $didReduce = doReduce(dbConn:$dbConn, userid:$userid);
   $timeoutCounter++;
-} while ($didReduce and ($timeoutCounter < 500));
+} while ($didReduce and ($timeoutCounter < 100));
 
 $resultCnt = $dbConn->query(query:"SELECT COUNT(*) as `total` FROM `pico_log` WHERE `userid` = \"$userid\" LIMIT 1;"); // guaranteed to return one row
 $resultFreshest = $dbConn->query(query:"SELECT `zeit` FROM `pico_log` WHERE `userid` = \"$userid\" ORDER BY `zeit` DESC LIMIT 1;"); // cannot combine those two
@@ -71,7 +71,7 @@ if ($totalCount > 0) {// this may be 0
   $zeitOldestString = $zeitOldest->format('Y-m-d H:i:s');
   
 
-  $QUERY_LIMIT = 10000; // have some upper limit, both for js and db-performance
+  $QUERY_LIMIT = 5000; // have some upper limit, both for js and db-performance
   $GRAPH_LIMIT = 3; // does not make sense to display a graph otherwise
 
   $sql = "SELECT `loopCount`, `zeit` from `pico_log` WHERE `userid` = \"$userid\" AND `zeit` > \"$zeitOldestString\" ";
@@ -95,8 +95,8 @@ if ($totalCount > 0) {// this may be 0
   <div class="text-left block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
     <h3 class="mb-2 text-xl font-bold tracking-tight text-gray-900">Status LoopCounter</h3>
     <p class="font-normal text-gray-700">
-    Der loop counter wird alle 5 Sekunden raufgezählt. Unten siehst du, ob das für deinen Anschluss in den letzten 365 Tagen zuverlässig funktioniert hat.<br>
-    Wenn der counter wieder bei 0 startet, hat sich der Mikrocontroller am Display neu gestartet. Solange das nur `selten` passiert, ist das soweit kein Problem...
+    Der loop counter wird alle 5 Sekunden raufgezählt. Unten siehst du, ob das für deinen Anschluss in der Vergangenheit zuverlässig funktioniert hat.<br>
+    Wenn der counter wieder bei 0 startet, hat sich der Mikrocontroller am Display neu gestartet. Solange das nur `selten` (d.h. alle paar Tage) passiert, ist das soweit kein Problem...
     </p>
   </div>
   <br>
