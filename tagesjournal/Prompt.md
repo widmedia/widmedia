@@ -3,6 +3,7 @@
 ## Refinement
 This list is updated as soon as the stuff works, only the next few points (TODOs) are listed
 1. in the calender view: add swiping support. When swiping left, go to previous month; swiping right to next month.
+1. add another color to the color palette: something dark blue-ish. Use it for the divider in the statistics card, the horizontal line between the months and the streaks. Also use this color for the streak bars itself, dark blue-ish for the current value, light blue-ish for the record value. Do not change the color depending on the value for those bars.
 1. question: which license is currently applied to this app? Which license use the dependencies I include? And where/how should I place the license if I want to change it? Which license model makes sense?
 1. (maybe) use another color for the button outline. Something dark-blueish. And add a light blue background to the button.  
 1. (maybe) apply the material 3 expressive design to the app.  
