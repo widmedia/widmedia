@@ -72,8 +72,10 @@ import ch.widmedia.tageswert.ui.components.TutorialOverlay
 import ch.widmedia.tageswert.ui.theme.AppBackground
 import ch.widmedia.tageswert.ui.theme.AppButton
 import ch.widmedia.tageswert.ui.theme.AppCardDefaults
+import ch.widmedia.tageswert.ui.theme.DarkBlue
 import ch.widmedia.tageswert.ui.theme.DeepForest
 import ch.widmedia.tageswert.ui.theme.DividerColor
+import ch.widmedia.tageswert.ui.theme.LightBlue
 import ch.widmedia.tageswert.ui.theme.GoldAmber
 import ch.widmedia.tageswert.ui.theme.SlateGray
 import ch.widmedia.tageswert.ui.theme.TagesWertTheme
@@ -209,7 +211,7 @@ fun HauptScreenContent(
         ) { paddingValues ->
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
                     .padding(bottom = paddingValues.calculateBottomPadding())
                     .verticalScroll(scrollState),
             ) {
@@ -502,7 +504,7 @@ fun HauptScreenContent(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, heightDp = 1350)
 @Composable
 fun HauptScreenPreview() {
     TagesWertTheme {
@@ -654,34 +656,30 @@ fun StatistikSektion(
                 }
             }
 
-            if (longestLoginStreak > 0 || longestEntryStreak > 0) {
-                Spacer(Modifier.height(16.dp))
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(DividerColor.copy(alpha = 0.3f))
-                )
-                Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(DarkBlue.copy(alpha = 0.3f))
+            )
+            Spacer(Modifier.height(16.dp))
 
-                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    if (longestLoginStreak > 0) {
-                        HorizontalStreakBar(
-                            label = stringResource(R.string.statistics_login_streak),
-                            current = currentLoginStreak,
-                            longest = longestLoginStreak,
-                            color = GoldAmber
-                        )
-                    }
-                    if (longestEntryStreak > 0) {
-                        HorizontalStreakBar(
-                            label = stringResource(R.string.statistics_entry_streak),
-                            current = currentEntryStreak,
-                            longest = longestEntryStreak,
-                            color = DeepForest
-                        )
-                    }
-                }
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                HorizontalStreakBar(
+                    label = stringResource(R.string.statistics_login_streak),
+                    current = currentLoginStreak,
+                    longest = longestLoginStreak,
+                    currentCol = DarkBlue,
+                    recordCol = LightBlue
+                )
+                HorizontalStreakBar(
+                    label = stringResource(R.string.statistics_entry_streak),
+                    current = currentEntryStreak,
+                    longest = longestEntryStreak,
+                    currentCol = DarkBlue,
+                    recordCol = LightBlue
+                )
             }
         }
     }
@@ -692,7 +690,8 @@ fun HorizontalStreakBar(
     label: String,
     current: Int,
     longest: Int,
-    color: Color
+    currentCol: Color = DarkBlue,
+    recordCol: Color = LightBlue
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -726,7 +725,7 @@ fun HorizontalStreakBar(
                 .fillMaxWidth()
                 .height(8.dp)
                 .clip(CircleShape)
-                .background(color.copy(alpha = 0.1f))
+                .background(recordCol)
         ) {
             val ratio = if (longest > 0) (current.toFloat() / longest.toFloat()).coerceIn(0f, 1f) else 0f
             Box(
@@ -734,7 +733,7 @@ fun HorizontalStreakBar(
                     .fillMaxWidth(ratio)
                     .fillMaxHeight()
                     .clip(CircleShape)
-                    .background(color)
+                    .background(currentCol)
             )
         }
     }

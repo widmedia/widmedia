@@ -42,6 +42,7 @@ import ch.widmedia.tageswert.ui.theme.TagesWertTheme
 import ch.widmedia.tageswert.ui.theme.ratingColor
 import ch.widmedia.tageswert.utils.DateUtil
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun MonatsKalender(
@@ -88,7 +89,13 @@ fun MonatsKalender(
 
             // Wochentage Header
             Row(modifier = Modifier.fillMaxWidth()) {
-                val wochentage = listOf("Mo", "Di", "Mi", "Do", "Fr", "Sa", "So")
+                val wochentage = remember {
+                    (0..6).map { day ->
+                        val date = LocalDate.of(2024, 1, 1).plusDays(day.toLong()) // Jan 1, 2024 is Monday
+                        val formatted = date.format(DateTimeFormatter.ofPattern("E", java.util.Locale.getDefault()))
+                        formatted.replaceFirstChar { if (it.isLowerCase()) it.titlecase(java.util.Locale.getDefault()) else it.toString() }
+                    }
+                }
                 wochentage.forEach { tag ->
                     Text(
                         text = tag,

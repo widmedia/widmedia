@@ -23,6 +23,8 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
@@ -90,8 +92,12 @@ fun SperrScreen(
         }
     }
 
+    val scrollState = rememberScrollState()
+
     Box(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -99,7 +105,8 @@ fun SperrScreen(
             verticalArrangement = Arrangement.spacedBy(24.dp),
             modifier = Modifier
                 .safeDrawingPadding()
-                .padding(horizontal = 40.dp, vertical = 24.dp)
+                .padding(horizontal = 40.dp, vertical = 32.dp)
+                .fillMaxWidth()
         ) {
             // App Logo
             AppLogo()
@@ -213,10 +220,9 @@ fun SperrScreen(
             ) {
                 Text(text = stringResource(R.string.auth_title))
             }
-        }
 
-        // Bottom spacing (10%)
-        Spacer(modifier = Modifier.align(Alignment.BottomCenter).height(80.dp))
+            Spacer(modifier = Modifier.height(24.dp))
+        }
     }
 }
 

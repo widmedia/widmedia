@@ -39,6 +39,8 @@ val ErrorRed      = Color(0xFFB53A2A)
 val Surface       = Color(0xFFFBF7EE)
 val CardBg        = Color(0xFFFFFFFF)
 val DividerColor  = Color(0xFFE0D8C8)
+val DarkBlue      = Color(0xFF1E3A5F)     // dark blue-ish
+val LightBlue     = Color(0xFF8FA9C4)     // light blue-ish
 
 // Rating colors (1=red, 10=green)
 fun ratingColor(rating: Int): Color = when (rating) {

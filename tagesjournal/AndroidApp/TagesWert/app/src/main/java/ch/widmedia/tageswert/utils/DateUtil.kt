@@ -44,21 +44,9 @@ object DateUtil {
     fun toIso(date: LocalDate): String = date.format(ISO_FORMAT)
 
     fun monthTitle(date: LocalDate): String {
-        return when (date.monthValue) {
-            1 -> "Januar"
-            2 -> "Februar"
-            3 -> "März"
-            4 -> "April"
-            5 -> "Mai"
-            6 -> "Juni"
-            7 -> "Juli"
-            8 -> "August"
-            9 -> "September"
-            10 -> "Oktober"
-            11 -> "November"
-            12 -> "Dezember"
-            else -> ""
-        } + " ${date.year}"
+        val formatter = DateTimeFormatter.ofPattern("MMMM yyyy", java.util.Locale.getDefault())
+        val formatted = date.format(formatter)
+        return formatted.replaceFirstChar { if (it.isLowerCase()) it.titlecase(java.util.Locale.getDefault()) else it.toString() }
     }
 
     fun daysInMonth(date: LocalDate): List<LocalDate?> {
@@ -89,28 +77,14 @@ object DateUtil {
     }
 
     fun wochentag(date: LocalDate): String {
-        return when (date.dayOfWeek.value) {
-            1 -> "Mo"
-            2 -> "Di"
-            3 -> "Mi"
-            4 -> "Do"
-            5 -> "Fr"
-            6 -> "Sa"
-            7 -> "So"
-            else -> ""
-        }
+        val formatter = DateTimeFormatter.ofPattern("E", java.util.Locale.getDefault())
+        val formatted = date.format(formatter)
+        return formatted.replaceFirstChar { if (it.isLowerCase()) it.titlecase(java.util.Locale.getDefault()) else it.toString() }
     }
 
     fun wochentagLang(date: LocalDate): String {
-        return when (date.dayOfWeek.value) {
-            1 -> "Montag"
-            2 -> "Dienstag"
-            3 -> "Mittwoch"
-            4 -> "Donnerstag"
-            5 -> "Freitag"
-            6 -> "Samstag"
-            7 -> "Sonntag"
-            else -> ""
-        }
+        val formatter = DateTimeFormatter.ofPattern(if (java.util.Locale.getDefault().language == "de") "EEEE" else "EEEE", java.util.Locale.getDefault())
+        val formatted = date.format(formatter)
+        return formatted.replaceFirstChar { if (it.isLowerCase()) it.titlecase(java.util.Locale.getDefault()) else it.toString() }
     }
 }
