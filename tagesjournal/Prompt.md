@@ -2,9 +2,9 @@
 
 ## Refinement
 This list is updated as soon as the stuff works, only the next few points (TODOs) are listed
+1. add an 'About' card to the bottom of the main view. Report the copyright of this app, belonging to widmedia. Add a link to widmedia.ch. Also report the used dependencies together with their license names.
 1. in the calender view: add swiping support. When swiping left, go to previous month; swiping right to next month.
-1. question: which license is currently applied to this app? Which license use the dependencies I include? And where/how should I place the license if I want to change it? Which license model makes sense?
-1. (maybe) use another color for the button outline. Something dark-blueish. And add a light blue background to the button.  
+1. (maybe) use another color for the button outline. The dark-blue already used. And maybe add a light blue background to the button.  
 1. (maybe) apply the material 3 expressive design to the app.  
 1. feature: add a view where one can flip through/skim through/browse the entries. Starting at the newest one. Should have the look of a diary with animations when browsing from one entry to the other.  
 1. try out some different UIs / colors. TODO: maybe with another tool (figma).  
