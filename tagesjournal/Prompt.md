@@ -2,7 +2,8 @@
 
 ## Refinement
 This list is updated as soon as the stuff works, only the next few points (TODOs) are listed
-1. add an 'About' card to the bottom of the main view. Report the copyright of this app, belonging to widmedia. Add a link to widmedia.ch. Also report the used dependencies together with their license names.
+1. the login pill does not show on the small screen
+1. check Gradle10
 1. in the calender view: add swiping support. When swiping left, go to previous month; swiping right to next month.
 1. (maybe) use another color for the button outline. The dark-blue already used. And maybe add a light blue background to the button.  
 1. (maybe) apply the material 3 expressive design to the app.  
@@ -32,3 +33,4 @@ This list is updated as soon as the stuff works, only the next few points (TODOs
 ## Done
 1. make sure all views are scrollable (at least the unlock screen is not scrollable on small screens)
 1. add another color to the color palette: something dark blue-ish. Use it for the divider in the statistics card, the horizontal line between the months and the streaks. Also use this color for the streak bars itself, dark blue-ish for the current value, light blue-ish for the record value. 
+1. add an 'About' card to the bottom of the main view. Report the copyright of this app, belonging to widmedia. Add a link to widmedia.ch. Also report the used dependencies together with their license names.

@@ -105,4 +105,16 @@
     <string name="tutorial_settings_data">Unter Import/Exports kannst du deine Daten sichern. Da alles lokal und verschlüsselt ist, solltest du regelmässig einen Export erstellen, um bei einem Gerätewechsel oder Problemen deine Einträge wiederherstellen zu können.</string>
     <string name="tutorial_settings_restart">Der eben erstellte Test-Eintrag wurde nun wieder gelöscht. Falls du später noch einmal Hilfe brauchst, kannst du das Tutorial hier jederzeit neu starten. Viel Freude mit TagesWert!</string>
     <string name="tutorial_finish">Tutorial abschliessen</string>
+
+    <!-- About -->
+    <string name="about_title">Über TagesWert</string>
+    <string name="about_copyright">© widmedia</string>
+    <string name="about_website">widmedia.ch</string>
+    <string name="about_dependencies_title">Verwendete Bibliotheken &amp; Lizenzen</string>
+    <string name="about_dep_androidx">AndroidX &amp; Jetpack Compose</string>
+    <string name="about_dep_kotlin">Kotlin</string>
+    <string name="about_dep_sqlcipher">SQLCipher for Android</string>
+    <string name="about_dep_gson">Gson</string>
+    <string name="license_apache2">Apache License 2.0</string>
+    <string name="license_bsd3">BSD 3-Clause License</string>
 </resources>

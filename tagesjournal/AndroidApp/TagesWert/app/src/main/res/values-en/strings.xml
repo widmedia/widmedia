@@ -105,4 +105,16 @@
     <string name="tutorial_settings_data">Under Import/Exports you can back up your data. Since everything is local and encrypted, you should create an export regularly to be able to restore your entries in case of a device change or problems.</string>
     <string name="tutorial_settings_restart">The test entry just created has been deleted again. If you need help later, you can restart the tutorial here at any time. Enjoy TagesWert!</string>
     <string name="tutorial_finish">Finish tutorial</string>
+
+    <!-- About -->
+    <string name="about_title">About TagesWert</string>
+    <string name="about_copyright">© widmedia</string>
+    <string name="about_website">widmedia.ch</string>
+    <string name="about_dependencies_title">Used Libraries &amp; Licenses</string>
+    <string name="about_dep_androidx">AndroidX &amp; Jetpack Compose</string>
+    <string name="about_dep_kotlin">Kotlin</string>
+    <string name="about_dep_sqlcipher">SQLCipher for Android</string>
+    <string name="about_dep_gson">Gson</string>
+    <string name="license_apache2">Apache License 2.0</string>
+    <string name="license_bsd3">BSD 3-Clause License</string>
 </resources>

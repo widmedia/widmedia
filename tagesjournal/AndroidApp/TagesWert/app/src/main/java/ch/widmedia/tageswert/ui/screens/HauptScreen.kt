@@ -8,6 +8,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,7 +27,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.RestartAlt
@@ -54,10 +57,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -77,6 +82,7 @@ import ch.widmedia.tageswert.ui.theme.DeepForest
 import ch.widmedia.tageswert.ui.theme.DividerColor
 import ch.widmedia.tageswert.ui.theme.LightBlue
 import ch.widmedia.tageswert.ui.theme.GoldAmber
+import ch.widmedia.tageswert.ui.theme.SageGreen
 import ch.widmedia.tageswert.ui.theme.SlateGray
 import ch.widmedia.tageswert.ui.theme.TagesWertTheme
 import ch.widmedia.tageswert.ui.theme.ratingColor
@@ -256,12 +262,11 @@ fun HauptScreenContent(
                 // Separator
                 Spacer(Modifier.height(16.dp))
 
-                // Lower Part: Summary
+                // Lower Part: Summary Card
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .padding(bottom = 32.dp),
+                        .padding(horizontal = 16.dp),
                     shape = AppCardDefaults.largeShape,
                     colors = AppCardDefaults.colors(),
                     elevation = AppCardDefaults.defaultElevation()
@@ -380,13 +385,12 @@ fun HauptScreenContent(
                     }
                 }
 
-                // Help & Tutorial Section at the bottom
+                // Help & Tutorial Section
                 Spacer(Modifier.height(16.dp))
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .padding(bottom = 32.dp),
+                        .padding(horizontal = 16.dp),
                     shape = AppCardDefaults.largeShape,
                     colors = AppCardDefaults.colors(),
                     elevation = AppCardDefaults.defaultElevation()
@@ -424,7 +428,17 @@ fun HauptScreenContent(
                         }
                     }
                 }
+
+                // About Card
                 Spacer(Modifier.height(24.dp))
+                UeberKarte(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
+
+                // Scroll padding at bottom
+                Spacer(Modifier.height(32.dp))
             }
         }
 
@@ -504,7 +518,7 @@ fun HauptScreenContent(
     }
 }
 
-@Preview(showBackground = true, heightDp = 1350)
+@Preview(showBackground = true, heightDp = 1650)
 @Composable
 fun HauptScreenPreview() {
     TagesWertTheme {
@@ -762,6 +776,142 @@ fun LeererZustand(modifier: Modifier = Modifier, onDarkBackground: Boolean = tru
             style = MaterialTheme.typography.bodyMedium,
             color = if (onDarkBackground) Color.White.copy(alpha = 0.7f) else SlateGray,
             textAlign = androidx.compose.ui.text.style.TextAlign.Center
+        )
+    }
+}
+
+@Composable
+fun UeberKarte(modifier: Modifier = Modifier) {
+    val uriHandler = LocalUriHandler.current
+
+    Card(
+        modifier = modifier,
+        shape = AppCardDefaults.largeShape,
+        colors = AppCardDefaults.colors(),
+        elevation = AppCardDefaults.defaultElevation()
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.about_title),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = DeepForest,
+                    fontWeight = FontWeight.Bold
+                )
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = null,
+                    tint = SageGreen,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+
+            Spacer(Modifier.height(12.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.about_copyright),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = DeepForest,
+                    fontWeight = FontWeight.SemiBold
+                )
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable { uriHandler.openUri("https://widmedia.ch") }
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.about_website),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            textDecoration = TextDecoration.Underline
+                        ),
+                        color = DarkBlue,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                        contentDescription = null,
+                        tint = DarkBlue,
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(DividerColor)
+            )
+
+            Spacer(Modifier.height(16.dp))
+
+            Text(
+                text = stringResource(R.string.about_dependencies_title),
+                style = MaterialTheme.typography.labelMedium,
+                color = SlateGray,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                DependencyItem(
+                    name = stringResource(R.string.about_dep_androidx),
+                    license = stringResource(R.string.license_apache2)
+                )
+                DependencyItem(
+                    name = stringResource(R.string.about_dep_kotlin),
+                    license = stringResource(R.string.license_apache2)
+                )
+                DependencyItem(
+                    name = stringResource(R.string.about_dep_sqlcipher),
+                    license = stringResource(R.string.license_bsd3)
+                )
+                DependencyItem(
+                    name = stringResource(R.string.about_dep_gson),
+                    license = stringResource(R.string.license_apache2)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun DependencyItem(name: String, license: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = name,
+            style = MaterialTheme.typography.bodySmall,
+            color = DeepForest,
+            fontWeight = FontWeight.Medium
+        )
+        Text(
+            text = license,
+            style = MaterialTheme.typography.labelSmall,
+            color = SlateGray
         )
     }
 }
