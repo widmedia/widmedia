@@ -29,8 +29,8 @@
     <string name="statistics_streak_longest">Rekord</string>
     <string name="show_all_entries">Alle %1$d Einträge anzeigen</string>
     <plurals name="streak_message">
-        <item quantity="one">Aktuelle Serie (ohne 2-Tages-Unterbruch): %1$d Tag</item>
-        <item quantity="other">Aktuelle Serie (ohne 2-Tages-Unterbruch): %1$d Tage</item>
+        <item quantity="one">Aktuelle Login-Serie: %1$d Tag\n(ohne 2-Tages-Unterbruch)</item>
+        <item quantity="other">Aktuelle Login-Serie: %1$d Tage\n(ohne 2-Tages-Unterbruch)</item>
     </plurals>
     <plurals name="streak_count">
         <item quantity="one">%1$d Tag in Folge</item>

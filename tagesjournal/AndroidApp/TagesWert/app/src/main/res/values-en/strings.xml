@@ -29,8 +29,8 @@
     <string name="statistics_streak_longest">Record</string>
     <string name="show_all_entries">Show all %1$d entries</string>
     <plurals name="streak_message">
-        <item quantity="one">Current streak (without 2-day break): %1$d day</item>
-        <item quantity="other">Current streak (without 2-day break): %1$d days</item>
+        <item quantity="one">Current login-streak: %1$d day\n(without 2-day break)</item>
+        <item quantity="other">Current login-streak: %1$d days\n(without 2-day break)</item>
     </plurals>
     <plurals name="streak_count">
         <item quantity="one">%1$d day in a row</item>

@@ -198,15 +198,19 @@ fun HauptScreenContent(
         }
     }
 
-    // Auto-hide streak message with entrance delay
-    var showStreak by remember { mutableStateOf(value = false) }
-    LaunchedEffect(uiState.currentLoginStreak, uiState.isStreakProcessed) {
-        if (uiState.currentLoginStreak > 0 && !uiState.isStreakProcessed) {
+    // Login streak message management matching success/error message display pattern
+    val loginStreakMsg = if (uiState.currentLoginStreak > 0 && !uiState.isStreakProcessed) {
+        pluralStringResource(R.plurals.streak_message, uiState.currentLoginStreak, uiState.currentLoginStreak)
+    } else {
+        null
+    }
+
+    LaunchedEffect(loginStreakMsg) {
+        loginStreakMsg?.let { msg ->
+            activeMessage = msg
+            delay(4000.milliseconds)
+            activeMessage = null
             onMarkStreakProcessed()
-            delay(1000.milliseconds) // Wait for screen transition to finish
-            showStreak = true
-            delay(5000.milliseconds)
-            showStreak = false
         }
     }
 
@@ -476,8 +480,7 @@ fun HauptScreenContent(
         }
 
         // Message Overlay (Streak or Success/Error)
-        val streakMsg = if (uiState.currentLoginStreak > 0) pluralStringResource(R.plurals.streak_message, uiState.currentLoginStreak, uiState.currentLoginStreak) else null
-        val displayMessage = activeMessage ?: if (showStreak) streakMsg else null
+        val displayMessage = activeMessage
 
         // Preserve message during exit animation
         var lastMessage by remember { mutableStateOf<String?>(null) }
@@ -689,7 +692,7 @@ fun StatistikSektion(
                 )
                 HorizontalStreakBar(
                     label = stringResource(R.string.statistics_entry_streak),
-                    current = currentEntryStreak,
+                    current = currentLoginStreak,
                     longest = longestEntryStreak,
                     currentCol = DarkBlue,
                     recordCol = LightBlue
@@ -750,33 +753,6 @@ fun HorizontalStreakBar(
                     .background(currentCol)
             )
         }
-    }
-}
-
-@Composable
-fun LeererZustand(modifier: Modifier = Modifier, onDarkBackground: Boolean = true) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "🌱",
-            fontSize = if (onDarkBackground) 48.sp else 40.sp
-        )
-        Spacer(modifier = Modifier.height(if (onDarkBackground) 12.dp else 8.dp))
-        Text(
-            text = stringResource(R.string.no_entries),
-            style = MaterialTheme.typography.titleMedium,
-            color = if (onDarkBackground) Color.White.copy(alpha = 0.9f) else DeepForest
-        )
-        Spacer(modifier = Modifier.height(if (onDarkBackground) 6.dp else 4.dp))
-        Text(
-            text = stringResource(R.string.no_entries_hint),
-            style = MaterialTheme.typography.bodyMedium,
-            color = if (onDarkBackground) Color.White.copy(alpha = 0.7f) else SlateGray,
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center
-        )
     }
 }
 
@@ -912,6 +888,33 @@ private fun DependencyItem(name: String, license: String) {
             text = license,
             style = MaterialTheme.typography.labelSmall,
             color = SlateGray
+        )
+    }
+}
+
+@Composable
+fun LeererZustand(modifier: Modifier = Modifier, onDarkBackground: Boolean = true) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "🌱",
+            fontSize = if (onDarkBackground) 48.sp else 40.sp
+        )
+        Spacer(modifier = Modifier.height(if (onDarkBackground) 12.dp else 8.dp))
+        Text(
+            text = stringResource(R.string.no_entries),
+            style = MaterialTheme.typography.titleMedium,
+            color = if (onDarkBackground) Color.White.copy(alpha = 0.9f) else DeepForest
+        )
+        Spacer(modifier = Modifier.height(if (onDarkBackground) { 12.dp } else { 4.dp }))
+        Text(
+            text = stringResource(R.string.no_entries_hint),
+            style = MaterialTheme.typography.bodyMedium,
+            color = if (onDarkBackground) Color.White.copy(alpha = 0.7f) else SlateGray,
+            textAlign = TextAlign.Center
         )
     }
 }
