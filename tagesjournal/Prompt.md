@@ -2,6 +2,7 @@
 
 ## Refinement
 This list is updated as soon as the stuff works, only the next few points (TODOs) are listed
+1. Bug in the entry streak: instead of the entry streak number, the login-streak number is displayed.
 1. Why can't I use Gradle version 10?
 1. in the calender view: add swiping support. When swiping left, go to previous month; swiping right to next month.
 1. (maybe) use another color for the button outline. The dark-blue already used. And maybe add a light blue background to the button.  
