@@ -692,7 +692,7 @@ fun StatistikSektion(
                 )
                 HorizontalStreakBar(
                     label = stringResource(R.string.statistics_entry_streak),
-                    current = currentLoginStreak,
+                    current = currentEntryStreak,
                     longest = longestEntryStreak,
                     currentCol = DarkBlue,
                     recordCol = LightBlue
