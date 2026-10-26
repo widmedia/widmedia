@@ -2,7 +2,6 @@
 
 ## Refinement
 This list is updated as soon as the stuff works, only the next few points (TODOs) are listed
-1. Why can't I use Gradle version 10?
 1. in the calender view: add swiping support. When swiping left, go to previous month; swiping right to next month.
 1. (maybe) use another color for the button outline. The dark-blue already used. And maybe add a light blue background to the button.  
 1. (maybe) apply the material 3 expressive design to the app.  
@@ -30,6 +29,7 @@ This list is updated as soon as the stuff works, only the next few points (TODOs
   "This App Bundle contains native code, and you've not uploaded debug symbols. We recommend that you upload a symbol file to make your crashes and ANRs easier to analyse and debug." and when I analyze my build, I don't have the BUNDLE-METADATA/com.android.tools.build.debugsymbols folder. NDK version 27.3.13750724 is installed.
 
 ## Done
+1. Why can't I use Gradle version 10? (latest is 9.8.2)
 1. (manually fixed) Bug in the entry streak: instead of the entry streak number, the login-streak number is displayed.
 1. The pill with the login streak is not visible on small screens (the entry streak however is visible fine). Have them behave the same way. Login streak pill shall appear after every login
 1. make sure all views are scrollable (at least the unlock screen is not scrollable on small screens)
