@@ -2,6 +2,7 @@
 
 ## Refinement
 This list is updated as soon as the stuff works, only the next few points (TODOs) are listed
+1. in the about section: add a text about bug reporting and feature requests. Those may be sent to tageswert@widmedia.ch.
 1. in the calender view: add swiping support. When swiping left, go to previous month; swiping right to next month.
 1. (maybe) use another color for the button outline. The dark-blue already used. And maybe add a light blue background to the button.  
 1. (maybe) apply the material 3 expressive design to the app.  
