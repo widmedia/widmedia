@@ -142,6 +142,11 @@ val TagesWertTypography = androidx.compose.material3.Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
     ),
+    labelSmall = TextStyle(
+        fontFamily = NunitoFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 10.sp,
+    ),
 )
 
 // ── Color Scheme ─────────────────────────────────────────────────────────────

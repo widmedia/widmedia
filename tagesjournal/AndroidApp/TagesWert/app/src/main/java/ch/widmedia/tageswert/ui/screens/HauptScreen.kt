@@ -829,6 +829,15 @@ fun UeberKarte(modifier: Modifier = Modifier) {
                 }
             }
 
+            Spacer(Modifier.height(12.dp))
+
+            Text(
+                text = stringResource(R.string.about_feedback_text),
+                style = MaterialTheme.typography.bodySmall,
+                color = SlateGray,
+                lineHeight = 16.sp
+            )
+
             Spacer(Modifier.height(16.dp))
 
             Box(

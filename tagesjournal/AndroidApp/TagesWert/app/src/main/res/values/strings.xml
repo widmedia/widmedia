@@ -110,7 +110,8 @@
     <string name="about_title">Über TagesWert</string>
     <string name="about_copyright">© widmedia</string>
     <string name="about_website">widmedia.ch</string>
-    <string name="about_dependencies_title">Verwendete Bibliotheken &amp; Lizenzen</string>
+    <string name="about_feedback_text">Hast du einen Fehler entdeckt oder fehlt noch ein Feature? Melde das doch gerne an tageswert@widmedia.ch.</string>
+    <string name="about_dependencies_title">Verwendete Bibliotheken und Lizenzen</string>
     <string name="about_dep_androidx">AndroidX &amp; Jetpack Compose</string>
     <string name="about_dep_kotlin">Kotlin</string>
     <string name="about_dep_sqlcipher">SQLCipher for Android</string>
