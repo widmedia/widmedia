@@ -7,11 +7,11 @@ lifecycleRuntimeKtx = "2.11.0"
 activityCompose = "1.13.0"
 composeBom = "2026.09.00"
 room = "2.8.5"
-sqlcipher = "4.19.1"
-biometric = "1.4.0-alpha07"
+sqlcipher = "4.20.0"
+biometric = "1.4.0-beta01"
 securityCrypto = "1.1.0"
 navigationCompose = "2.10.2"
-gson = "2.14.0"
+gson = "2.15.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
