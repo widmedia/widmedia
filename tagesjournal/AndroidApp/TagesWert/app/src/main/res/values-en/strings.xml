@@ -10,7 +10,6 @@
     <string name="auth_title">Unlock</string>
     <string name="auth_subtitle"> </string>
     <string name="auth_prompt">Authentication required</string>
-    <string name="auth_cancel">Cancel</string>
     <string name="auth_error">Authentication error</string>
     <string name="auth_no_biometric">No fingerprint set up. This app only works with fingerprint. Please configure in settings.</string>
     <string name="auth_waiting">Tap to unlock</string>

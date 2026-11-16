@@ -8,18 +8,17 @@ import androidx.fragment.app.FragmentActivity
 
 object BiometricHelper {
 
+    private const val AUTHENTICATORS = BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL
+
     fun isBiometricAvailable(context: Context): Boolean {
         val manager = BiometricManager.from(context)
-        return manager.canAuthenticate(
-            BiometricManager.Authenticators.BIOMETRIC_STRONG,
-        ) == BiometricManager.BIOMETRIC_SUCCESS
+        return manager.canAuthenticate(AUTHENTICATORS) == BiometricManager.BIOMETRIC_SUCCESS
     }
 
     fun showBiometricPrompt(
         activity: FragmentActivity,
         title: String,
         subtitle: String,
-        cancelText: String,
         onSuccess: () -> Unit,
         onError: (String) -> Unit,
         onFailed: () -> Unit
@@ -34,7 +33,10 @@ object BiometricHelper {
 
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                 super.onAuthenticationError(errorCode, errString)
-                onError(errString.toString())
+                // When DEVICE_CREDENTIAL is used, negative button cannot be set and cancel error code is handled differently or ignored.
+                if (errorCode != BiometricPrompt.ERROR_NEGATIVE_BUTTON && errorCode != BiometricPrompt.ERROR_USER_CANCELED) {
+                    onError(errString.toString())
+                }
             }
 
             override fun onAuthenticationFailed() {
@@ -45,12 +47,15 @@ object BiometricHelper {
 
         val biometricPrompt = BiometricPrompt(activity, executor, callback)
 
-        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+        val promptBuilder = BiometricPrompt.PromptInfo.Builder()
             .setTitle(title)
             .setSubtitle(subtitle)
-            .setNegativeButtonText(cancelText)
-            .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG)
-            .build()
+            .setAllowedAuthenticators(AUTHENTICATORS)
+
+        // Note: setNegativeButtonText cannot be called when DEVICE_CREDENTIAL is included in allowed authenticators.
+        // BiometricPrompt handles cancellation via system UI when DEVICE_CREDENTIAL is allowed.
+
+        val promptInfo = promptBuilder.build()
 
         biometricPrompt.authenticate(promptInfo)
     }

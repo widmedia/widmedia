@@ -108,7 +108,6 @@ class MainActivity : FragmentActivity() {
                 activity = this,
                 title = getString(R.string.auth_prompt),
                 subtitle = getString(R.string.auth_subtitle),
-                cancelText = getString(R.string.auth_cancel),
                 onSuccess = {
                     authStatus = AuthStatus.SUCCESS
                 },
