@@ -37,7 +37,6 @@ import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -80,17 +79,17 @@ import ch.widmedia.tageswert.ui.theme.AppCardDefaults
 import ch.widmedia.tageswert.ui.theme.DarkBlue
 import ch.widmedia.tageswert.ui.theme.DeepForest
 import ch.widmedia.tageswert.ui.theme.DividerColor
-import ch.widmedia.tageswert.ui.theme.LightBlue
 import ch.widmedia.tageswert.ui.theme.GoldAmber
+import ch.widmedia.tageswert.ui.theme.LightBlue
 import ch.widmedia.tageswert.ui.theme.SageGreen
 import ch.widmedia.tageswert.ui.theme.SlateGray
 import ch.widmedia.tageswert.ui.theme.TagesWertTheme
 import ch.widmedia.tageswert.ui.theme.ratingColor
 import kotlinx.coroutines.delay
-import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.launch
 import java.time.LocalDate
+import kotlin.time.Duration.Companion.milliseconds
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HauptScreen(
     viewModel: MainViewModel,
@@ -129,7 +128,6 @@ fun HauptScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HauptScreenContent(
     alleEintraege: List<TagEintrag>,
@@ -151,6 +149,7 @@ fun HauptScreenContent(
 ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
+    var datenverwaltungOffsetY by remember { androidx.compose.runtime.mutableIntStateOf(0) }
     
     // Scroll to tutorial items
     LaunchedEffect(uiState.tutorialStep) {
@@ -231,8 +230,15 @@ fun HauptScreenContent(
                         .fillMaxWidth(),
                 ) {
                     Column {
+                        val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()
                         AppHeader(
                             onLock = onLock,
+                            uiState = uiState,
+                            onScrollToDatenverwaltung = {
+                                coroutineScope.launch(kotlinx.coroutines.Dispatchers.Main) {
+                                    scrollState.animateScrollTo(datenverwaltungOffsetY)
+                                }
+                            }
                         )
                         Spacer(Modifier.height(8.dp))
                         MonatsKalender(
@@ -270,7 +276,10 @@ fun HauptScreenContent(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                        .padding(horizontal = 16.dp)
+                        .onGloballyPositioned { coordinates ->
+                            datenverwaltungOffsetY = coordinates.localToRoot(androidx.compose.ui.geometry.Offset.Zero).y.toInt()
+                        },
                     shape = AppCardDefaults.largeShape,
                     colors = AppCardDefaults.colors(),
                     elevation = AppCardDefaults.defaultElevation()
@@ -548,7 +557,11 @@ fun HauptScreenPreview() {
 }
 
 @Composable
-fun AppHeader(onLock: () -> Unit) {
+fun AppHeader(
+    onLock: () -> Unit,
+    uiState: UiState,
+    onScrollToDatenverwaltung: () -> Unit
+) {
     var isLocking by remember { mutableStateOf(value = false) }
 
     LaunchedEffect(isLocking) {
@@ -582,6 +595,25 @@ fun AppHeader(onLock: () -> Unit) {
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    val thirtyDaysMillis = 30L * 24 * 60 * 60 * 1000
+                    val isOlderThan30Days = (System.currentTimeMillis() - uiState.lastExportTime) > thirtyDaysMillis
+                    val firstStartOlderThan30Days = (System.currentTimeMillis() - uiState.firstStartTime) > thirtyDaysMillis
+                    
+                    if (isOlderThan30Days && firstStartOlderThan30Days) {
+                        IconButton(
+                            onClick = onScrollToDatenverwaltung,
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .background(GoldAmber.copy(alpha = 0.2f))
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Warning,
+                                contentDescription = stringResource(R.string.export_reminder_title),
+                                tint = GoldAmber
+                            )
+                        }
+                    }
+
                     IconButton(
                         onClick = { if (!isLocking) isLocking = true },
                         modifier = Modifier
