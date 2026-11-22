@@ -77,7 +77,6 @@ import ch.widmedia.tageswert.ui.theme.Surface
 import ch.widmedia.tageswert.ui.theme.TagesWertTheme
 import ch.widmedia.tageswert.utils.DateUtil
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EintragScreen(
     datum: String,
@@ -123,7 +122,6 @@ fun EintragScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EintragScreenContent(
     datum: String,

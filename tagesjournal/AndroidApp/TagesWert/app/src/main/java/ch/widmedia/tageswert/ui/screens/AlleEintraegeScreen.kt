@@ -55,7 +55,6 @@ import ch.widmedia.tageswert.ui.theme.SlateGray
 import ch.widmedia.tageswert.ui.theme.TagesWertTheme
 import ch.widmedia.tageswert.ui.theme.Terracotta
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlleEintraegeScreen(
     viewModel: MainViewModel,

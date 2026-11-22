@@ -33,14 +33,6 @@ object DateUtil {
         }
     }
 
-    fun kalenderWochen(): List<LocalDate> {
-        val today = LocalDate.now()
-        val diff = today.dayOfWeek.value - 1
-        val currentMonday = today.minusDays(diff.toLong())
-        val lastMonday = currentMonday.minusDays(7)
-        return (0..13).map { lastMonday.plusDays(it.toLong()) }
-    }
-
     fun toIso(date: LocalDate): String = date.format(ISO_FORMAT)
 
     fun monthTitle(date: LocalDate): String {
@@ -51,8 +43,7 @@ object DateUtil {
 
     fun daysInMonth(date: LocalDate): List<LocalDate?> {
         val firstOfMonth = date.withDayOfMonth(1)
-        val lastOfMonth = date.withDayOfMonth(date.lengthOfMonth())
-        
+
         val firstDayOfWeek = firstOfMonth.dayOfWeek.value // 1 (Mon) to 7 (Sun)
         val daysBefore = firstDayOfWeek - 1
         

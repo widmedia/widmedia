@@ -152,7 +152,7 @@ class MainViewModel(private val repository: EintragRepository) : ViewModel() {
         if (eintraege.isEmpty()) return 0 to SecurityManager.getLongestEntryStreak(context)
 
         val entryDates = eintraege.mapNotNull {
-            try { LocalDate.parse(it.datum, DateUtil.ISO_FORMAT) } catch (e: Exception) { null }
+            try { LocalDate.parse(it.datum, DateUtil.ISO_FORMAT) } catch (_: Exception) { null }
         }.toSet()
 
         if (entryDates.isEmpty()) return 0 to SecurityManager.getLongestEntryStreak(context)
@@ -363,10 +363,9 @@ class MainViewModel(private val repository: EintragRepository) : ViewModel() {
     fun ladeMonatBewertungen(datum: LocalDate) {
         viewModelScope.launch {
             val firstOfMonth = datum.withDayOfMonth(1)
-            val von = firstOfMonth
             val bis = firstOfMonth.withDayOfMonth(firstOfMonth.lengthOfMonth())
             val bewertungen = repository.bewertungenFuerZeitraum(
-                DateUtil.toIso(von),
+                DateUtil.toIso(firstOfMonth),
                 DateUtil.toIso(bis)
             )
             val map = bewertungen.associate { it.datum to it.bewertung }
